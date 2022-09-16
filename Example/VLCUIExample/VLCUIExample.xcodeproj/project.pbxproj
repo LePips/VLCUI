@@ -1,0 +1,575 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E1734C9528D50EE0007B9768 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1734C9428D50EE0007B9768 /* ContentViewModel.swift */; };
+		E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CEFEB28D50F1500ADF78E /* VLCUI */; };
+		E19CEFEE28D50F2A00ADF78E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFED28D50F2A00ADF78E /* OverlayView.swift */; };
+		E19CEFF028D50FE000ADF78E /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; };
+		E19CEFF128D50FE000ADF78E /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E19CEFFA28D5101B00ADF78E /* tvOSVLCUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFF928D5101B00ADF78E /* tvOSVLCUIExampleApp.swift */; };
+		E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFFB28D5101B00ADF78E /* ContentView.swift */; };
+		E19CEFFE28D5101C00ADF78E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E19CEFFD28D5101C00ADF78E /* Assets.xcassets */; };
+		E19CF00128D5101C00ADF78E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E19CF00028D5101C00ADF78E /* Preview Assets.xcassets */; };
+		E19CF00628D5103600ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CF00528D5103600ADF78E /* VLCUI */; };
+		E19CF00828D5103B00ADF78E /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */; };
+		E19CF00928D5103B00ADF78E /* TVVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E19CF00C28D5106600ADF78E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CF00B28D5106600ADF78E /* OverlayView.swift */; };
+		E19CF00D28D5108600ADF78E /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1734C9428D50EE0007B9768 /* ContentViewModel.swift */; };
+		E1A52CCD28D50E95009BB067 /* VLCUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A52CCC28D50E95009BB067 /* VLCUIExampleApp.swift */; };
+		E1A52CCF28D50E95009BB067 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A52CCE28D50E95009BB067 /* ContentView.swift */; };
+		E1A52CD128D50E96009BB067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A52CD028D50E96009BB067 /* Assets.xcassets */; };
+		E1A52CD428D50E96009BB067 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A52CD328D50E96009BB067 /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E19CEFF228D50FE000ADF78E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E19CEFF128D50FE000ADF78E /* MobileVLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E19CF00A28D5103B00ADF78E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E19CF00928D5103B00ADF78E /* TVVLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		E1734C9428D50EE0007B9768 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		E1734C9728D50EFE007B9768 /* VLCUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = VLCUI; path = ../..; sourceTree = "<group>"; };
+		E19CEFE928D50F1100ADF78E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E19CEFED28D50F2A00ADF78E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Carthage/Build/MobileVLCKit.xcframework; sourceTree = "<group>"; };
+		E19CEFF728D5101B00ADF78E /* tvOSVLCUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tvOSVLCUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E19CEFF928D5101B00ADF78E /* tvOSVLCUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tvOSVLCUIExampleApp.swift; sourceTree = "<group>"; };
+		E19CEFFB28D5101B00ADF78E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E19CEFFD28D5101C00ADF78E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E19CF00028D5101C00ADF78E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = Carthage/Build/TVVLCKit.xcframework; sourceTree = "<group>"; };
+		E19CF00B28D5106600ADF78E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		E1A52CC928D50E95009BB067 /* VLCUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VLCUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1A52CCC28D50E95009BB067 /* VLCUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCUIExampleApp.swift; sourceTree = "<group>"; };
+		E1A52CCE28D50E95009BB067 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E1A52CD028D50E96009BB067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E1A52CD328D50E96009BB067 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E19CEFF428D5101B00ADF78E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E19CF00828D5103B00ADF78E /* TVVLCKit.xcframework in Frameworks */,
+				E19CF00628D5103600ADF78E /* VLCUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A52CC628D50E95009BB067 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E19CEFF028D50FE000ADF78E /* MobileVLCKit.xcframework in Frameworks */,
+				E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1734C9628D50EFE007B9768 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E1734C9728D50EFE007B9768 /* VLCUI */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		E19CEFEA28D50F1500ADF78E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */,
+				E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E19CEFF828D5101B00ADF78E /* tvOSVLCUIExample */ = {
+			isa = PBXGroup;
+			children = (
+				E19CEFF928D5101B00ADF78E /* tvOSVLCUIExampleApp.swift */,
+				E19CEFFB28D5101B00ADF78E /* ContentView.swift */,
+				E19CF00B28D5106600ADF78E /* OverlayView.swift */,
+				E19CEFFD28D5101C00ADF78E /* Assets.xcassets */,
+				E19CEFFF28D5101C00ADF78E /* Preview Content */,
+			);
+			path = tvOSVLCUIExample;
+			sourceTree = "<group>";
+		};
+		E19CEFFF28D5101C00ADF78E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E19CF00028D5101C00ADF78E /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E1A52CC028D50E95009BB067 = {
+			isa = PBXGroup;
+			children = (
+				E1734C9628D50EFE007B9768 /* Packages */,
+				E1A52CCB28D50E95009BB067 /* VLCUIExample */,
+				E19CEFF828D5101B00ADF78E /* tvOSVLCUIExample */,
+				E1A52CCA28D50E95009BB067 /* Products */,
+				E19CEFEA28D50F1500ADF78E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E1A52CCA28D50E95009BB067 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E1A52CC928D50E95009BB067 /* VLCUIExample.app */,
+				E19CEFF728D5101B00ADF78E /* tvOSVLCUIExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E1A52CCB28D50E95009BB067 /* VLCUIExample */ = {
+			isa = PBXGroup;
+			children = (
+				E19CEFE928D50F1100ADF78E /* Info.plist */,
+				E1A52CCC28D50E95009BB067 /* VLCUIExampleApp.swift */,
+				E1A52CCE28D50E95009BB067 /* ContentView.swift */,
+				E1734C9428D50EE0007B9768 /* ContentViewModel.swift */,
+				E19CEFED28D50F2A00ADF78E /* OverlayView.swift */,
+				E1A52CD028D50E96009BB067 /* Assets.xcassets */,
+				E1A52CD228D50E96009BB067 /* Preview Content */,
+			);
+			path = VLCUIExample;
+			sourceTree = "<group>";
+		};
+		E1A52CD228D50E96009BB067 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E1A52CD328D50E96009BB067 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E19CEFF628D5101B00ADF78E /* tvOSVLCUIExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E19CF00228D5101C00ADF78E /* Build configuration list for PBXNativeTarget "tvOSVLCUIExample" */;
+			buildPhases = (
+				E19CEFF328D5101B00ADF78E /* Sources */,
+				E19CEFF428D5101B00ADF78E /* Frameworks */,
+				E19CEFF528D5101B00ADF78E /* Resources */,
+				E19CF00A28D5103B00ADF78E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = tvOSVLCUIExample;
+			packageProductDependencies = (
+				E19CF00528D5103600ADF78E /* VLCUI */,
+			);
+			productName = tvOSVLCUIExample;
+			productReference = E19CEFF728D5101B00ADF78E /* tvOSVLCUIExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E1A52CC828D50E95009BB067 /* VLCUIExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1A52CD728D50E96009BB067 /* Build configuration list for PBXNativeTarget "VLCUIExample" */;
+			buildPhases = (
+				E1A52CC528D50E95009BB067 /* Sources */,
+				E1A52CC628D50E95009BB067 /* Frameworks */,
+				E1A52CC728D50E95009BB067 /* Resources */,
+				E19CEFF228D50FE000ADF78E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VLCUIExample;
+			packageProductDependencies = (
+				E19CEFEB28D50F1500ADF78E /* VLCUI */,
+			);
+			productName = VLCUIExample;
+			productReference = E1A52CC928D50E95009BB067 /* VLCUIExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E1A52CC128D50E95009BB067 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					E19CEFF628D5101B00ADF78E = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					E1A52CC828D50E95009BB067 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = E1A52CC428D50E95009BB067 /* Build configuration list for PBXProject "VLCUIExample" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E1A52CC028D50E95009BB067;
+			productRefGroup = E1A52CCA28D50E95009BB067 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1A52CC828D50E95009BB067 /* VLCUIExample */,
+				E19CEFF628D5101B00ADF78E /* tvOSVLCUIExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E19CEFF528D5101B00ADF78E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E19CF00128D5101C00ADF78E /* Preview Assets.xcassets in Resources */,
+				E19CEFFE28D5101C00ADF78E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A52CC728D50E95009BB067 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1A52CD428D50E96009BB067 /* Preview Assets.xcassets in Resources */,
+				E1A52CD128D50E96009BB067 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E19CEFF328D5101B00ADF78E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E19CF00D28D5108600ADF78E /* ContentViewModel.swift in Sources */,
+				E19CF00C28D5106600ADF78E /* OverlayView.swift in Sources */,
+				E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */,
+				E19CEFFA28D5101B00ADF78E /* tvOSVLCUIExampleApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A52CC528D50E95009BB067 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1A52CCF28D50E95009BB067 /* ContentView.swift in Sources */,
+				E19CEFEE28D50F2A00ADF78E /* OverlayView.swift in Sources */,
+				E1A52CCD28D50E95009BB067 /* VLCUIExampleApp.swift in Sources */,
+				E1734C9528D50EE0007B9768 /* ContentViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E19CF00328D5101C00ADF78E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"tvOSVLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.tvOSVLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 15.4;
+			};
+			name = Debug;
+		};
+		E19CF00428D5101C00ADF78E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"tvOSVLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.tvOSVLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 15.4;
+			};
+			name = Release;
+		};
+		E1A52CD528D50E96009BB067 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E1A52CD628D50E96009BB067 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E1A52CD828D50E96009BB067 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VLCUIExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.VLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E1A52CD928D50E96009BB067 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VLCUIExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.VLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E19CF00228D5101C00ADF78E /* Build configuration list for PBXNativeTarget "tvOSVLCUIExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E19CF00328D5101C00ADF78E /* Debug */,
+				E19CF00428D5101C00ADF78E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1A52CC428D50E95009BB067 /* Build configuration list for PBXProject "VLCUIExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1A52CD528D50E96009BB067 /* Debug */,
+				E1A52CD628D50E96009BB067 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1A52CD728D50E96009BB067 /* Build configuration list for PBXNativeTarget "VLCUIExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1A52CD828D50E96009BB067 /* Debug */,
+				E1A52CD928D50E96009BB067 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E19CEFEB28D50F1500ADF78E /* VLCUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCUI;
+		};
+		E19CF00528D5103600ADF78E /* VLCUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E1A52CC128D50E95009BB067 /* Project object */;
+}
