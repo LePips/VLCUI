@@ -1,6 +1,4 @@
-import Combine
 import Foundation
-import MediaPlayer
 import SwiftUI
 
 #if os(tvOS)
@@ -9,32 +7,69 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
-protocol VLCVideoPlayerDelegate {
-    var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never> { get set }
-    
-    func ticksUpdated(_ ticks: Int32)
-    func playerStateUpdated(_ newState: VLCVideoPlayer.State)
-}
+// TODO: More events
 
-struct VLCVideoPlayer: UIViewControllerRepresentable {
-    
+public struct VLCVideoPlayer: UIViewControllerRepresentable {
+
+    // MARK: Scope
+
     // Configuration for VLCMediaPlayer
-    struct Configuration {
-        var options: [String: Any]
-        
+    public class Configuration {
+        public var options: [String: Any] = [:]
+        public var autoPlay: Bool = false
+        public var defaultSubtitleIndex: TrackIndexSelector = .auto
+        public var defaultAudioIndex: TrackIndexSelector = .auto
+        public var defaultSubtitleSize: FontSizeSelector = .auto
+        public var defaultFontName: FontNameSelector = .auto
+        public var playbackChildren: [PlaybackChild] = []
     }
-    
+
     // Possible events to send to the underlying VLC media player
-    enum Event {
-        case pause
+    public enum Event {
+        /// Play the media
         case play
+
+        /// Pause the media
+        case pause
+
+        /// Stop the media. Will no longer response to `.play` or `.pause` events
+        case stop
+
+        /// Jump forward a given amount of seconds
         case jumpForward(Int32)
+
+        /// Jump backward a given amount of seconds
         case jumpBackward(Int32)
+
+        /// Set the subtitle track index
+        case setSubtitleIndex(TrackIndexSelector)
+
+        /// Set the audio track index
+        case setAudioIndex(TrackIndexSelector)
+
+        /// Set the media playback speed
+        case setPlaybackSpeed(Float)
+
+        /// Aspect fill the video depending on the video's content size and the view's bounds
+        case aspectFill(Bool)
+
+        /// Set the unit position
+        ///
+        /// **Note:** position is unstable and may not indicate an accurate position
+        case setPosition(Float)
+
+        /// Set the media subtitle size
+        case setSubtitleSize(FontSizeSelector)
+
+        /// Set the subtitle font
+        case setSubtitleFont(FontNameSelector)
+
+        /// Add a playback child
+        case addPlaybackChild(PlaybackChild)
     }
-    
-    // Wrapper of VLCMediaPlayerState so that MediaPlayer and MobileVLCKit/TVVLCKit
-    // are not necessary to be imported where VLCVideoPlayer is used
-    enum State: Int {
+
+    // Wrapper so that VLCKit imports are not necessary
+    public enum State: Int {
         case stopped
         case opening
         case buffering
@@ -44,132 +79,92 @@ struct VLCVideoPlayer: UIViewControllerRepresentable {
         case paused
         case esAdded
     }
-    
-    private let url: URL
-    private let delegate: VLCVideoPlayerDelegate
-    
-    init(url: URL, delegate: VLCVideoPlayerDelegate) {
-        self.url = url
-        self.delegate = delegate
-    }
-    
-    func makeUIViewController(context: Context) -> UIVLCVideoPlayerViewController {
-        UIVLCVideoPlayerViewController.init(url: url, delegate: delegate)
-    }
-    
-    func updateUIViewController(_ uiViewController: UIVLCVideoPlayerViewController, context: Context) { }
-}
 
-class UIVLCVideoPlayerViewController: UIViewController {
-    
-    private lazy var videoContentView = makeVideoContentView()
-    
-    private let playbackURL: URL
-    private let delegate: VLCVideoPlayerDelegate
-    
-    private var lastPlayerTicks: Int32 = 0
-    private var lastPlayerState: VLCMediaPlayerState = .opening
-    
-    private var mediaPlayer: VLCMediaPlayer!
-    private var cancellables = Set<AnyCancellable>()
-    
-    init(url: URL, delegate: VLCVideoPlayerDelegate) {
-        self.playbackURL = url
-        self.delegate = delegate
-        self.mediaPlayer = nil
-        super.init(nibName: nil, bundle: nil)
-        
-        setupVLCMediaPlayer()
-        setupEventSubjectListener()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupVideoContentView()
-        
-        view.backgroundColor = .clear
-        view.accessibilityIgnoresInvertColors = true
-    }
-    
-    private func setupVideoContentView() {
-        view.addSubview(videoContentView)
-        
-        NSLayoutConstraint.activate([
-            videoContentView.topAnchor.constraint(equalTo: view.topAnchor),
-            videoContentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            videoContentView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            videoContentView.rightAnchor.constraint(equalTo: view.rightAnchor)
-        ])
-    }
-    
-    private func setupVLCMediaPlayer() {
-        let media = VLCMedia(url: playbackURL)
-        
-        media.addOption("--prefetch-buffer-size=1048576")
-        media.addOption("--network-caching=5000")
-        
-        let vlcMediaPlayer = VLCMediaPlayer()
-        vlcMediaPlayer.media = media
-        vlcMediaPlayer.drawable = videoContentView
-        vlcMediaPlayer.delegate = self
-        
-        self.mediaPlayer = vlcMediaPlayer
-    }
-    
-    private func makeVideoContentView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
-        return view
-    }
-}
+    public struct PlaybackChild {
+        public let url: URL
+        public let type: PlaybackChildType
+        public let enforce: Bool
 
-// MARK: Event Listener
+        public init(url: URL, type: PlaybackChildType, enforce: Bool) {
+            self.url = url
+            self.type = type
+            self.enforce = enforce
+        }
 
-extension UIVLCVideoPlayerViewController {
-    func setupEventSubjectListener() {
-        delegate.eventSubject.sink { event in
-            guard let event = event else { return }
-            switch event {
-            case .play:
-                self.mediaPlayer.play()
-            case .pause:
-                self.mediaPlayer.pause()
-            case .jumpForward(let interval):
-                self.mediaPlayer.jumpForward(interval)
-            case .jumpBackward(let interval):
-                self.mediaPlayer.jumpBackward(interval)
+        // Wrapper so that VLCKit imports are not necessary
+        public enum PlaybackChildType {
+            case subtitle
+            case audio
+
+            var asVLCSlaveType: VLCMediaPlaybackSlaveType {
+                switch self {
+                case .subtitle: return .subtitle
+                case .audio: return .audio
+                }
             }
         }
-        .store(in: &cancellables)
     }
+
+    public enum TrackIndexSelector {
+        /// Let VLC automatically determine a track index
+        case auto
+
+        /// Set an absolute track index
+        case absolute(Int32)
+    }
+
+    public enum FontSizeSelector {
+        /// Let VLC automatically determine a font size
+        case auto
+
+        /// Set an absolute font size
+        case absolute(Int)
+    }
+
+    public enum FontNameSelector {
+        /// Let VLC automatically determine a font
+        case auto
+
+        /// Set an absolute font
+        case absolute(String)
+    }
+
+    // MARK: Implementation
+
+    private let playbackURL: URL
+    private var configure: (Configuration) -> Void
+    private var delegate: VLCVideoPlayerDelegate?
+
+    public func makeUIViewController(context: Context) -> UIVLCVideoPlayerViewController {
+        let configuration = VLCVideoPlayer.Configuration()
+        configure(configuration)
+
+        return UIVLCVideoPlayerViewController(
+            url: playbackURL,
+            configuration: configuration,
+            delegate: delegate
+        )
+    }
+
+    public func updateUIViewController(_ uiViewController: UIVLCVideoPlayerViewController, context: Context) {}
 }
 
-// MARK: VLCMediaPlayerDelegate
-
-extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
-    func mediaPlayerTimeChanged(_ aNotification: Notification) {
-        let player = aNotification.object as! VLCMediaPlayer
-        let ticks = player.time.intValue
-
-        delegate.ticksUpdated(ticks)
-        
-        if lastPlayerState != .playing && abs(ticks - lastPlayerTicks) >= 200 {
-            delegate.playerStateUpdated(.playing)
-            lastPlayerState = .playing
-            lastPlayerTicks = ticks
-        }
+public extension VLCVideoPlayer {
+    init(url: URL) {
+        self.playbackURL = url
+        self.configure = { _ in }
+        self.delegate = nil
     }
-    
-    func mediaPlayerStateChanged(_ aNotification: Notification) {
-        let player = aNotification.object as! VLCMediaPlayer
-        guard player.state != .playing else { return }
-        delegate.playerStateUpdated(VLCVideoPlayer.State(rawValue: player.state.rawValue) ?? .error)
-        lastPlayerState = player.state
+
+    func configure(_ configure: @escaping (VLCVideoPlayer.Configuration) -> Void) -> Self {
+        var copy = self
+        copy.configure = configure
+        return copy
+    }
+
+    func delegate(_ delegate: VLCVideoPlayerDelegate) -> Self {
+        var copy = self
+        copy.delegate = delegate
+        return copy
     }
 }

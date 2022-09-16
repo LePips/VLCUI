@@ -12,13 +12,15 @@ let package = Package(
     products: [
         .library(
             name: "VLCUI",
-            targets: ["VLCUI"]),
+            targets: ["VLCUI"]
+        ),
     ],
     dependencies: [
     ],
     targets: [
         .target(
             name: "VLCUI",
-            dependencies: [])
+            dependencies: []
+        ),
     ]
 )
