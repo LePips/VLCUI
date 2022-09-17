@@ -8,7 +8,7 @@ VLCKit must be installed and added to your project prior to using VLCUI. A **Car
 
 # Example
 
-An iOS and tvOS example project is provided to show basic functionality of VLCUI. In order to ues the project, you must run the command below with the **Cartfile** in the current directory.
+An iOS and tvOS example project is provided to show basic functionality of VLCUI. In order to use the project, you must run the command below with the **Cartfile** in the current directory.
 
 ```
 carthage update --use-xcframeworks
