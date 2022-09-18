@@ -41,18 +41,31 @@ extension VLCMediaPlayer {
     }
 
     func setSubtitleFont(_ fontName: VLCVideoPlayer.FontNameSelector) {
-        let value: String?
+        let value: String
 
         switch fontName {
         case .auto:
-            value = nil
-        case let .absolute(name):
-            value = name
+            value = UIFont.defaultSubtitleFont.fontName
+        case let .absolute(fontName):
+            value = fontName
         }
 
         perform(
             Selector(("setTextRendererFont:")),
             with: value
         )
+    }
+}
+
+extension UIFont {
+    static let defaultSubtitleFont = UIFont.systemFont(ofSize: 14)
+}
+
+public extension Int32 {
+
+    // Provided utility for rounding to nearest thousand
+    // when using ticks
+    var roundNearestThousand: Int32 {
+        (self / 1000) * 1000
     }
 }

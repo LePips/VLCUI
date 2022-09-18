@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		E1734C9528D50EE0007B9768 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1734C9428D50EE0007B9768 /* ContentViewModel.swift */; };
+		E18A8E8628D64CA000333B9A /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; };
+		E18A8E8728D64CA000333B9A /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CEFEB28D50F1500ADF78E /* VLCUI */; };
 		E19CEFEE28D50F2A00ADF78E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFED28D50F2A00ADF78E /* OverlayView.swift */; };
-		E19CEFF028D50FE000ADF78E /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; };
-		E19CEFF128D50FE000ADF78E /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E19CEFFA28D5101B00ADF78E /* tvOSVLCUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFF928D5101B00ADF78E /* tvOSVLCUIExampleApp.swift */; };
 		E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFFB28D5101B00ADF78E /* ContentView.swift */; };
 		E19CEFFE28D5101C00ADF78E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E19CEFFD28D5101C00ADF78E /* Assets.xcassets */; };
@@ -28,13 +28,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E19CEFF228D50FE000ADF78E /* Embed Frameworks */ = {
+		E18A8E8828D64CA000333B9A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E19CEFF128D50FE000ADF78E /* MobileVLCKit.xcframework in Embed Frameworks */,
+				E18A8E8728D64CA000333B9A /* MobileVLCKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,7 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E19CEFF028D50FE000ADF78E /* MobileVLCKit.xcframework in Frameworks */,
+				E18A8E8628D64CA000333B9A /* MobileVLCKit.xcframework in Frameworks */,
 				E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,7 +204,7 @@
 				E1A52CC528D50E95009BB067 /* Sources */,
 				E1A52CC628D50E95009BB067 /* Frameworks */,
 				E1A52CC728D50E95009BB067 /* Resources */,
-				E19CEFF228D50FE000ADF78E /* Embed Frameworks */,
+				E18A8E8828D64CA000333B9A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -478,6 +478,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VLCUIExample/Info.plist;
@@ -486,6 +488,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -507,6 +510,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VLCUIExample/Info.plist;
@@ -515,6 +520,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

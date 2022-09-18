@@ -1,15 +1,24 @@
-# VLCUI
-
 A [VLCKit](https://code.videolan.org/videolan/VLCKit) wrapper for SwiftUI.
 
-# Requirements
+## Requirements
 
-VLCKit must be installed and added to your project prior to using VLCUI. A **Cartfile** is provided for ease of use in the example project.
+VLCKit must be installed and added to your project prior to using VLCUI.
 
-# Example
+## Usage
 
-An iOS and tvOS example project is provided to show basic functionality of VLCUI. In order to use the project, you must run the command below with the **Cartfile** in the current directory.
+```swift
+struct ContentView: View {
+	var body: some View {
+		VLCVideoPlayer(url: /* video url */)
+	}
+}
+```
 
+## Example
+
+An example project for iOS and tvOS is provided to show basic functionality of VLCUI. In order to start the example project, you must download and link the frameworks.
+
+An example **Cartfile** is provided. Run the following command to download the frameworks:
 ```
 carthage update --use-xcframeworks
 ```

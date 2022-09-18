@@ -8,6 +8,10 @@ import MobileVLCKit
 #endif
 
 // TODO: More events
+// TODO: Provide VLCVideoPlayer.PlaybackInformation.stats as properties
+// TODO: Change FontNameSelector.absolute to use UIFont?
+// TODO: Documentation
+// TODO: Break nested objects into files
 
 public struct VLCVideoPlayer: UIViewControllerRepresentable {
 
@@ -32,7 +36,7 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         /// Pause the media
         case pause
 
-        /// Stop the media. Will no longer response to `.play` or `.pause` events
+        /// Stop the media and will no longer respond to events
         case stop
 
         /// Jump forward a given amount of seconds
@@ -42,10 +46,10 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         case jumpBackward(Int32)
 
         /// Set the subtitle track index
-        case setSubtitleIndex(TrackIndexSelector)
+        case setSubtitleTrack(TrackIndexSelector)
 
         /// Set the audio track index
-        case setAudioIndex(TrackIndexSelector)
+        case setAudioTrack(TrackIndexSelector)
 
         /// Set the media playback speed
         case setPlaybackSpeed(Float)
@@ -53,12 +57,13 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         /// Aspect fill the video depending on the video's content size and the view's bounds
         case aspectFill(Bool)
 
-        /// Set the unit position
-        ///
-        /// **Note:** position is unstable and may not indicate an accurate position
-        case setPosition(Float)
+        /// Set the player ticks
+        case setTicks(Int32)
 
         /// Set the media subtitle size
+        ///
+        /// **Note**: Due to VLCKit, a given size does not accurately represent a font size and magnitudes are inverted.
+        /// Larger values indicate a smaller font and smaller values indicate a larger font.
         case setSubtitleSize(FontSizeSelector)
 
         /// Set the subtitle font
@@ -78,6 +83,19 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         case playing
         case paused
         case esAdded
+    }
+
+    public struct PlaybackInformation {
+        public let position: Float
+        public let length: Int32
+        public let isSeekable: Bool
+
+        public let currentSubtitleTrack: (Int32, String)
+        public let currentAudioTrack: (Int32, String)
+        public let subtitleTracks: [Int32: String]
+        public let audioTracks: [Int32: String]
+
+        public let stats: [AnyHashable: Any]
     }
 
     public struct PlaybackChild {
@@ -106,10 +124,10 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
     }
 
     public enum TrackIndexSelector {
-        /// Let VLC automatically determine a track index
+        /// Let VLC automatically set a track index, if one is available
         case auto
 
-        /// Set an absolute track index
+        /// Set a track index
         case absolute(Int32)
     }
 
@@ -117,15 +135,15 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         /// Let VLC automatically determine a font size
         case auto
 
-        /// Set an absolute font size
+        /// Set a font size
         case absolute(Int)
     }
 
     public enum FontNameSelector {
-        /// Let VLC automatically determine a font
+        /// Use the default system font
         case auto
 
-        /// Set an absolute font
+        /// Set a font given the font name
         case absolute(String)
     }
 
@@ -133,7 +151,7 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
 
     private let playbackURL: URL
     private var configure: (Configuration) -> Void
-    private var delegate: VLCVideoPlayerDelegate?
+    private var delegate: VLCVideoPlayerDelegate
 
     public func makeUIViewController(context: Context) -> UIVLCVideoPlayerViewController {
         let configuration = VLCVideoPlayer.Configuration()
@@ -153,7 +171,7 @@ public extension VLCVideoPlayer {
     init(url: URL) {
         self.playbackURL = url
         self.configure = { _ in }
-        self.delegate = nil
+        self.delegate = DefaultVideoPlayerDelegate()
     }
 
     func configure(_ configure: @escaping (VLCVideoPlayer.Configuration) -> Void) -> Self {

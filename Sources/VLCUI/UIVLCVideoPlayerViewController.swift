@@ -9,14 +9,18 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
+// TODO: Cleanup setupEventSubjectListener
+// TODO: Cleanup constructPlaybackInformation
+
 public class UIVLCVideoPlayerViewController: UIViewController {
 
     private lazy var videoContentView = makeVideoContentView()
 
     private let playbackURL: URL
     private let configuration: VLCVideoPlayer.Configuration
-    private let delegate: VLCVideoPlayerDelegate?
+    private let delegate: VLCVideoPlayerDelegate
 
+    private var hasSetDefaultConfiguration: Bool = false
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
 
@@ -26,7 +30,7 @@ public class UIVLCVideoPlayerViewController: UIViewController {
     init(
         url: URL,
         configuration: VLCVideoPlayer.Configuration,
-        delegate: VLCVideoPlayerDelegate?
+        delegate: VLCVideoPlayerDelegate
     ) {
         self.playbackURL = url
         self.configuration = configuration
@@ -95,9 +99,9 @@ public class UIVLCVideoPlayerViewController: UIViewController {
 
 public extension UIVLCVideoPlayerViewController {
 
-    // TODO: Cleanup
     func setupEventSubjectListener() {
-        guard let delegate = delegate else { return }
+        guard let media = mediaPlayer.media else { return }
+
         delegate.eventSubject.sink { event in
             guard let event = event else { return }
             switch event {
@@ -107,30 +111,36 @@ public extension UIVLCVideoPlayerViewController {
                 self.mediaPlayer.pause()
             case .stop:
                 self.mediaPlayer.stop()
+                self.cancellables.forEach { $0.cancel() }
             case let .jumpForward(interval):
                 self.mediaPlayer.jumpForward(interval)
             case let .jumpBackward(interval):
                 self.mediaPlayer.jumpBackward(interval)
-            case let .setSubtitleIndex(track):
+            case let .setSubtitleTrack(track):
                 switch track {
                 case .auto:
-                    if let indexes = self.mediaPlayer.videoSubTitlesIndexes as? [Int32], let first = indexes.first(where: { $0 != -1 }) {
-                        self.mediaPlayer.currentVideoSubTitleIndex = first
-                        delegate.subtitleIndexDidChange(first)
+                    if let indexes = self.mediaPlayer.videoSubTitlesIndexes as? [Int32],
+                       let firstValidTrack = indexes.first(where: { $0 != -1 })
+                    {
+                        self.mediaPlayer.currentVideoSubTitleIndex = firstValidTrack
+                        self.delegate.vlcVideoPlayer(didChangeSubtitleTrack: firstValidTrack)
                     }
                 case let .absolute(index):
                     self.mediaPlayer.currentVideoSubTitleIndex = index
-                    delegate.subtitleIndexDidChange(index)
+                    self.delegate.vlcVideoPlayer(didChangeSubtitleTrack: index)
                 }
-            case let .setAudioIndex(track):
+            case let .setAudioTrack(track):
                 switch track {
                 case .auto:
-                    if let indexes = self.mediaPlayer.audioTrackIndexes as? [Int32], let first = indexes.first(where: { $0 != -1 }) {
-                        self.mediaPlayer.currentAudioTrackIndex = first
-                        delegate.audioIndexDidChange(first)
+                    if let indexes = self.mediaPlayer.audioTrackIndexes as? [Int32],
+                       let firstValidTrack = indexes.first(where: { $0 != -1 })
+                    {
+                        self.mediaPlayer.currentAudioTrackIndex = firstValidTrack
+                        self.delegate.vlcVideoPlayer(didChangeAudioTrack: firstValidTrack)
                     }
                 case let .absolute(index):
                     self.mediaPlayer.currentAudioTrackIndex = index
+                    self.delegate.vlcVideoPlayer(didChangeAudioTrack: index)
                 }
             case let .setPlaybackSpeed(speed):
                 self.mediaPlayer.rate = speed
@@ -140,9 +150,9 @@ public extension UIVLCVideoPlayerViewController {
                 } else {
                     self.shrinkScreen()
                 }
-            case let .setPosition(position):
-                assert(position >= 0 && position <= 1, "Position must be in the range 0...1")
-                self.mediaPlayer.position = position
+            case let .setTicks(ticks):
+                assert(ticks >= 0 && ticks <= media.length.intValue)
+                self.mediaPlayer.time = VLCTime(int: ticks)
             case let .setSubtitleSize(size):
                 self.mediaPlayer.setSubtitleSize(size)
             case let .setSubtitleFont(fontName):
@@ -181,56 +191,91 @@ public extension UIVLCVideoPlayerViewController {
 // MARK: VLCMediaPlayerDelegate
 
 extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
+
+    private func constructPlaybackInformation(player: VLCMediaPlayer, media: VLCMedia) -> VLCVideoPlayer.PlaybackInformation {
+
+        let subtitleIndexes = player.videoSubTitlesIndexes as! [Int32]
+        let subtitleNames = player.videoSubTitlesNames as! [String]
+
+        let audioIndexes = player.audioTrackIndexes as! [Int32]
+        let audioNames = player.audioTrackNames as! [String]
+
+        let zippedSubtitleTracks = Dictionary(uniqueKeysWithValues: zip(subtitleIndexes, subtitleNames))
+        let zippedAudioTracks = Dictionary(uniqueKeysWithValues: zip(audioIndexes, audioNames))
+
+        let currentSubtitleTrack: (Int32, String)
+        let currentAudioTrack: (Int32, String)
+
+        if let currentValidSubtitleTrack = zippedSubtitleTracks[player.currentVideoSubTitleIndex] {
+            currentSubtitleTrack = (player.currentVideoSubTitleIndex, currentValidSubtitleTrack)
+        } else {
+            currentSubtitleTrack = (-1, "Disable")
+        }
+
+        if let currentValidAudioTrack = zippedAudioTracks[player.currentAudioTrackIndex] {
+            currentAudioTrack = (player.currentAudioTrackIndex, currentValidAudioTrack)
+        } else {
+            currentAudioTrack = (-1, "Disable")
+        }
+
+        return VLCVideoPlayer.PlaybackInformation(
+            position: player.position,
+            length: media.length.intValue,
+            isSeekable: player.isSeekable,
+            currentSubtitleTrack: currentSubtitleTrack,
+            currentAudioTrack: currentAudioTrack,
+            subtitleTracks: zippedSubtitleTracks,
+            audioTracks: zippedAudioTracks,
+            stats: media.stats ?? [:]
+        )
+    }
+
     public func mediaPlayerTimeChanged(_ aNotification: Notification) {
-        guard let delegate = delegate else { return }
         let player = aNotification.object as! VLCMediaPlayer
-        let ticks = player.time.intValue
+        let currentTicks = player.time.intValue
+        let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        delegate.ticksUpdated(ticks, player.position)
+        delegate.vlcVideoPlayer(
+            didUpdateTicks: currentTicks,
+            with: playbackInformation
+        )
 
-        if lastPlayerState != .playing && abs(ticks - lastPlayerTicks) >= 200 {
-            delegate.playerStateUpdated(.playing)
+        if lastPlayerState != .playing && abs(currentTicks - lastPlayerTicks) >= 200 {
+            delegate.vlcVideoPlayer(didUpdateState: .playing)
             lastPlayerState = .playing
-            lastPlayerTicks = ticks
+            lastPlayerTicks = currentTicks
         }
     }
 
     public func mediaPlayerStateChanged(_ aNotification: Notification) {
-        guard let delegate = delegate else { return }
         let player = aNotification.object as! VLCMediaPlayer
-        guard player.state != .playing else { return }
+        guard player.state != .playing, player.state != lastPlayerState else { return }
 
         let wrappedState = VLCVideoPlayer.State(rawValue: player.state.rawValue) ?? .error
 
-        delegate.playerStateUpdated(wrappedState)
+        delegate.vlcVideoPlayer(didUpdateState: wrappedState)
         lastPlayerState = player.state
 
-        if wrappedState == .esAdded {
-            switch configuration.defaultSubtitleIndex {
-            case .auto: ()
-            case let .absolute(index):
-                player.currentVideoSubTitleIndex = index
-            }
+        if !hasSetDefaultConfiguration {
+            setDefaultConfiguration(with: player)
+            hasSetDefaultConfiguration = true
 
-            switch configuration.defaultAudioIndex {
-            case .auto: ()
-            case let .absolute(index):
-                player.currentAudioTrackIndex = index
-            }
-
-            let subtitleIndexes = player.videoSubTitlesIndexes as! [Int32]
-            let subtitleNames = player.videoSubTitlesNames as! [String]
-
-            let audioIndexes = player.audioTrackIndexes as! [Int32]
-            let audioNames = player.audioTrackNames as! [String]
-
-            let zippedSubtitles = Array(zip(subtitleIndexes, subtitleNames))
-            let zippedAudios = Array(zip(audioIndexes, audioNames))
-
-            delegate.didParseSubtitleIndexes(zippedSubtitles)
-            delegate.didParseAudioIndexes(zippedAudios)
-            delegate.subtitleIndexDidChange(player.currentVideoSubTitleIndex)
-            delegate.audioIndexDidChange(player.currentAudioTrackIndex)
+            // Perform initial delegate calls
+            delegate.vlcVideoPlayer(didChangeSubtitleTrack: player.currentVideoSubTitleIndex)
+            delegate.vlcVideoPlayer(didChangeAudioTrack: player.currentAudioTrackIndex)
         }
+    }
+
+    private func setDefaultConfiguration(with player: VLCMediaPlayer) {
+        if case let VLCVideoPlayer.TrackIndexSelector.absolute(index) = configuration.defaultSubtitleIndex {
+            player.currentVideoSubTitleIndex = index
+        }
+
+        if case let VLCVideoPlayer.TrackIndexSelector.absolute(index) = configuration.defaultAudioIndex {
+            player.currentAudioTrackIndex = index
+        }
+
+        player.setSubtitleFont(configuration.defaultFontName)
+        player.setSubtitleSize(configuration.defaultSubtitleSize)
     }
 }

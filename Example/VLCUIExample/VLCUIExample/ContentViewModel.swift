@@ -10,24 +10,27 @@ class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
     var playerState: VLCVideoPlayer.State = .opening
     @Published
     var position: Float = 0
+    @Published
+    var totalTicks: Int32 = 0
 
     var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never> = .init(nil)
 
     func setCustomPosition(_ position: Float) {
         self.position = position
-        self.eventSubject.send(.setPosition(position))
     }
 
-    func ticksUpdated(_ ticks: Int32, _ position: Float) {
+    func vlcVideoPlayer(didUpdateTicks ticks: Int32, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {
         self.ticks = ticks
-        self.position = position
+        self.position = playbackInformation.position
+
+        self.totalTicks = playbackInformation.length
     }
 
-    func playerStateUpdated(_ newState: VLCVideoPlayer.State) {
-        self.playerState = newState
+    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State) {
+        self.playerState = state
 
-        if newState == .error {
-            print("error occurred")
+        if state == .error {
+            print("An error has occurred")
         }
     }
 }

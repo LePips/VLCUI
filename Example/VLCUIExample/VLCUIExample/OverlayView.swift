@@ -40,11 +40,14 @@ struct OverlayView: View {
                 Group {
                     if viewModel.playerState == .playing {
                         Image(systemName: "pause.circle.fill")
+                    } else if viewModel.playerState == .buffering {
+                        ProgressView()
                     } else {
                         Image(systemName: "play.circle.fill")
                     }
                 }
                 .font(.system(size: 28, weight: .heavy, design: .default))
+                .frame(maxWidth: 30)
             }
 
             Button {
@@ -54,19 +57,24 @@ struct OverlayView: View {
                     .font(.system(size: 28, weight: .regular, design: .default))
             }
 
-            Text(timeText(for: viewModel.ticks / 1000))
-                .frame(width: 100)
+            HStack(spacing: 5) {
+                Text(timeText(for: viewModel.ticks.roundNearestThousand / 1000))
+                    .frame(width: 50)
 
-            Slider(
-                value: $currentPosition,
-                in: 0 ... Float(1.0)
-            ) { isEditing in
-                isScrubbing = isEditing
+                Slider(
+                    value: $currentPosition,
+                    in: 0 ... Float(1.0)
+                ) { isEditing in
+                    isScrubbing = isEditing
+                }
+
+                Text(timeText(for: (viewModel.totalTicks.roundNearestThousand - viewModel.ticks.roundNearestThousand) / 1000))
+                    .frame(width: 50)
             }
         }
         .onChange(of: isScrubbing) { isScrubbing in
             guard !isScrubbing else { return }
-            self.viewModel.setCustomPosition(currentPosition)
+            self.viewModel.eventSubject.send(.setTicks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
         }
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }
