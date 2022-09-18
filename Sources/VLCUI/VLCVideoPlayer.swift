@@ -60,6 +60,9 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
         /// Set the player ticks
         case setTicks(Int32)
 
+        /// Set the player seconds
+        case setSeconds(Int32)
+
         /// Set the media subtitle size
         ///
         /// **Note**: Due to VLCKit, a given size does not accurately represent a font size and magnitudes are inverted.

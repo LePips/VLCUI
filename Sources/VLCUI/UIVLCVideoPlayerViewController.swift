@@ -151,8 +151,12 @@ public extension UIVLCVideoPlayerViewController {
                     self.shrinkScreen()
                 }
             case let .setTicks(ticks):
-                assert(ticks >= 0 && ticks <= media.length.intValue)
+                assert(ticks >= 0 && ticks <= media.length.intValue, "Given ticks not in range of media length")
                 self.mediaPlayer.time = VLCTime(int: ticks)
+            case let .setSeconds(seconds):
+                let tickSeconds = seconds * 1000
+                assert(tickSeconds >= 0 && tickSeconds <= media.length.intValue, "Given seconds not in range of media length")
+                self.mediaPlayer.time = VLCTime(int: tickSeconds)
             case let .setSubtitleSize(size):
                 self.mediaPlayer.setSubtitleSize(size)
             case let .setSubtitleFont(fontName):
