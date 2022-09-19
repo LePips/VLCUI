@@ -58,7 +58,7 @@ struct OverlayView: View {
             }
 
             HStack(spacing: 5) {
-                Text(timeText(for: viewModel.ticks.roundNearestThousand / 1000))
+                Text(timeText(for: viewModel.ticks.roundDownNearestThousand / 1000))
                     .frame(width: 50)
 
                 Slider(
@@ -68,13 +68,13 @@ struct OverlayView: View {
                     isScrubbing = isEditing
                 }
 
-                Text(timeText(for: (viewModel.totalTicks.roundNearestThousand - viewModel.ticks.roundNearestThousand) / 1000))
+                Text(timeText(for: (viewModel.totalTicks.roundDownNearestThousand - viewModel.ticks.roundDownNearestThousand) / 1000))
                     .frame(width: 50)
             }
         }
         .onChange(of: isScrubbing) { isScrubbing in
             guard !isScrubbing else { return }
-            self.viewModel.eventSubject.send(.setTicks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
+//            self.viewModel.eventSubject.send(.setTicks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
         }
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }

@@ -9,7 +9,6 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
-// TODO: Cleanup setupEventSubjectListener
 // TODO: Cleanup constructPlaybackInformation
 
 public class UIVLCVideoPlayerViewController: UIViewController {
@@ -117,50 +116,29 @@ public extension UIVLCVideoPlayerViewController {
             case let .jumpBackward(interval):
                 self.mediaPlayer.jumpBackward(interval)
             case let .setSubtitleTrack(track):
-                switch track {
-                case .auto:
-                    if let indexes = self.mediaPlayer.videoSubTitlesIndexes as? [Int32],
-                       let firstValidTrack = indexes.first(where: { $0 != -1 })
-                    {
-                        self.mediaPlayer.currentVideoSubTitleIndex = firstValidTrack
-                        self.delegate.vlcVideoPlayer(didChangeSubtitleTrack: firstValidTrack)
-                    }
-                case let .absolute(index):
-                    self.mediaPlayer.currentVideoSubTitleIndex = index
-                    self.delegate.vlcVideoPlayer(didChangeSubtitleTrack: index)
-                }
+                let newTrackIndex = self.mediaPlayer.subtitleTrackIndex(from: track)
+                self.mediaPlayer.currentVideoSubTitleIndex = newTrackIndex
             case let .setAudioTrack(track):
-                switch track {
-                case .auto:
-                    if let indexes = self.mediaPlayer.audioTrackIndexes as? [Int32],
-                       let firstValidTrack = indexes.first(where: { $0 != -1 })
-                    {
-                        self.mediaPlayer.currentAudioTrackIndex = firstValidTrack
-                        self.delegate.vlcVideoPlayer(didChangeAudioTrack: firstValidTrack)
-                    }
-                case let .absolute(index):
-                    self.mediaPlayer.currentAudioTrackIndex = index
-                    self.delegate.vlcVideoPlayer(didChangeAudioTrack: index)
-                }
-            case let .setPlaybackSpeed(speed):
-                self.mediaPlayer.rate = speed
+                let newTrackIndex = self.mediaPlayer.audioTrackIndex(from: track)
+                self.mediaPlayer.currentAudioTrackIndex = newTrackIndex
+            case let .fastForward(speed):
+                let newSpeed = self.mediaPlayer.fastForwardSpeed(from: speed)
+                self.mediaPlayer.fastForward(atRate: newSpeed)
             case let .aspectFill(fill):
                 if fill {
                     self.fillScreen(screenSize: self.videoContentView.bounds.size)
                 } else {
                     self.shrinkScreen()
                 }
-            case let .setTicks(ticks):
-                assert(ticks >= 0 && ticks <= media.length.intValue, "Given ticks not in range of media length")
-                self.mediaPlayer.time = VLCTime(int: ticks)
-            case let .setSeconds(seconds):
-                let tickSeconds = seconds * 1000
-                assert(tickSeconds >= 0 && tickSeconds <= media.length.intValue, "Given seconds not in range of media length")
-                self.mediaPlayer.time = VLCTime(int: tickSeconds)
+            case let .setTime(time):
+                assert(time.asTicks >= 0 && time.asTicks <= media.length.intValue, "Given time not in range of media length")
+                self.mediaPlayer.time = VLCTime(int: time.asTicks)
             case let .setSubtitleSize(size):
                 self.mediaPlayer.setSubtitleSize(size)
-            case let .setSubtitleFont(fontName):
-                self.mediaPlayer.setSubtitleFont(fontName)
+            case let .setSubtitleFont(font):
+                self.mediaPlayer.setSubtitleFont(font)
+            case let .setSubtitleColor(color):
+                self.mediaPlayer.setSubtitleColor(color)
             case let .addPlaybackChild(child):
                 self.mediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
             }
@@ -226,6 +204,7 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
             position: player.position,
             length: media.length.intValue,
             isSeekable: player.isSeekable,
+            playbackRate: player.rate,
             currentSubtitleTrack: currentSubtitleTrack,
             currentAudioTrack: currentAudioTrack,
             subtitleTracks: zippedSubtitleTracks,
@@ -248,6 +227,11 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
             delegate.vlcVideoPlayer(didUpdateState: .playing)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
+
+            if !hasSetDefaultConfiguration {
+                setDefaultConfiguration(with: player)
+                hasSetDefaultConfiguration = true
+            }
         }
     }
 
@@ -259,27 +243,22 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
 
         delegate.vlcVideoPlayer(didUpdateState: wrappedState)
         lastPlayerState = player.state
-
-        if !hasSetDefaultConfiguration {
-            setDefaultConfiguration(with: player)
-            hasSetDefaultConfiguration = true
-
-            // Perform initial delegate calls
-            delegate.vlcVideoPlayer(didChangeSubtitleTrack: player.currentVideoSubTitleIndex)
-            delegate.vlcVideoPlayer(didChangeAudioTrack: player.currentAudioTrackIndex)
-        }
     }
 
     private func setDefaultConfiguration(with player: VLCMediaPlayer) {
-        if case let VLCVideoPlayer.TrackIndexSelector.absolute(index) = configuration.defaultSubtitleIndex {
-            player.currentVideoSubTitleIndex = index
-        }
+        let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
+        player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex
 
-        if case let VLCVideoPlayer.TrackIndexSelector.absolute(index) = configuration.defaultAudioIndex {
-            player.currentAudioTrackIndex = index
-        }
+        let defaultAudioTrackIndex = player.audioTrackIndex(from: configuration.audioIndex)
+        player.currentAudioTrackIndex = defaultAudioTrackIndex
 
-        player.setSubtitleFont(configuration.defaultFontName)
-        player.setSubtitleSize(configuration.defaultSubtitleSize)
+        player.setSubtitleSize(configuration.subtitleSize)
+        player.setSubtitleFont(configuration.subtitleFont)
+        player.setSubtitleColor(configuration.subtitleColor)
+
+        player.time = VLCTime(int: configuration.startTime.asTicks)
+
+        let defaultPlayerSpeed = player.fastForwardSpeed(from: configuration.playbackSpeed)
+        player.fastForward(atRate: defaultPlayerSpeed)
     }
 }
