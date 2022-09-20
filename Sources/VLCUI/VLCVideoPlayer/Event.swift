@@ -38,6 +38,12 @@ public extension VLCVideoPlayer {
         /// **Note**: If there is no valid track with the given index, the track will default to disabled
         case setAudioTrack(ValueSelector<Int32>)
 
+        /// Set the subtitle delay
+        case setSubtitleDelay(TimeSelector)
+
+        /// Set the audio delay
+        case setAudioDelay(TimeSelector)
+
         /// Fast forward at a given rate
         case fastForward(ValueSelector<Float>)
 

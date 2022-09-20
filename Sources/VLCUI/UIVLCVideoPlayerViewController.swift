@@ -135,6 +135,12 @@ public extension UIVLCVideoPlayerViewController {
             case let .setAudioTrack(track):
                 let newTrackIndex = currentMediaPlayer.audioTrackIndex(from: track)
                 currentMediaPlayer.currentAudioTrackIndex = newTrackIndex
+            case let .setSubtitleDelay(delay):
+                let delay = Int(delay.asTicks) * 1000
+                currentMediaPlayer.currentVideoSubTitleDelay = delay
+            case let .setAudioDelay(delay):
+                let delay = Int(delay.asTicks) * 1000
+                currentMediaPlayer.currentAudioPlaybackDelay = delay
             case let .fastForward(speed):
                 let newSpeed = currentMediaPlayer.fastForwardSpeed(from: speed)
                 currentMediaPlayer.fastForward(atRate: newSpeed)
