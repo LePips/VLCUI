@@ -127,6 +127,8 @@ public extension UIVLCVideoPlayerViewController {
                 currentMediaPlayer.jumpForward(interval)
             case let .jumpBackward(interval):
                 currentMediaPlayer.jumpBackward(interval)
+            case .gotoNextFrame:
+                currentMediaPlayer.gotoNextFrame()
             case let .setSubtitleTrack(track):
                 let newTrackIndex = currentMediaPlayer.subtitleTrackIndex(from: track)
                 currentMediaPlayer.currentVideoSubTitleIndex = newTrackIndex

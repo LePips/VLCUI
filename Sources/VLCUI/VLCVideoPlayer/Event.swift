@@ -14,7 +14,7 @@ public extension VLCVideoPlayer {
         /// Stop the current media
         case stop
 
-        /// Stops the current media and stops responding to future events
+        /// Stop the current media and stop responding to future events
         case cancel
 
         /// Jump forward a given amount of seconds
@@ -22,6 +22,11 @@ public extension VLCVideoPlayer {
 
         /// Jump backward a given amount of seconds
         case jumpBackward(Int32)
+
+        /// Go to the next frame
+        ///
+        /// **Note**: media will be paused
+        case gotoNextFrame
 
         /// Set the subtitle track index
         ///
