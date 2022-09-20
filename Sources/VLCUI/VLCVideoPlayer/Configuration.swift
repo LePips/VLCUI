@@ -5,7 +5,7 @@ public extension VLCVideoPlayer {
 
     // Configuration for VLCMediaPlayer
     class Configuration {
-        public var options: [String: Any] = [:]
+        public var url: URL
         public var autoPlay: Bool = false
         public var startTime: TimeSelector = .ticks(0)
         public var playbackSpeed: ValueSelector<Float> = .auto
@@ -15,5 +15,10 @@ public extension VLCVideoPlayer {
         public var subtitleFont: ValueSelector<UIFont> = .auto
         public var subtitleColor: ValueSelector<UIColor> = .auto
         public var playbackChildren: [PlaybackChild] = []
+        public var options: [String: Any] = [:]
+
+        public init(url: URL) {
+            self.url = url
+        }
     }
 }

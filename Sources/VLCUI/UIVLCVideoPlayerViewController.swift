@@ -15,29 +15,25 @@ public class UIVLCVideoPlayerViewController: UIViewController {
 
     private lazy var videoContentView = makeVideoContentView()
 
-    private let playbackURL: URL
-    private let configuration: VLCVideoPlayer.Configuration
+    private var currentConfiguration: VLCVideoPlayer.Configuration
     private let delegate: VLCVideoPlayerDelegate
+    private var currentMediaPlayer: VLCMediaPlayer?
 
     private var hasSetDefaultConfiguration: Bool = false
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
-
-    private var mediaPlayer: VLCMediaPlayer!
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        url: URL,
         configuration: VLCVideoPlayer.Configuration,
         delegate: VLCVideoPlayerDelegate
     ) {
-        self.playbackURL = url
-        self.configuration = configuration
+        self.currentConfiguration = configuration
         self.delegate = delegate
-        self.mediaPlayer = nil
+        self.currentMediaPlayer = nil
         super.init(nibName: nil, bundle: nil)
 
-        setupVLCMediaPlayer()
+        setupVLCMediaPlayer(with: configuration)
         setupEventSubjectListener()
     }
 
@@ -66,23 +62,31 @@ public class UIVLCVideoPlayerViewController: UIViewController {
         ])
     }
 
-    private func setupVLCMediaPlayer() {
-        let media = VLCMedia(url: playbackURL)
+    private func setupVLCMediaPlayer(with configuration: VLCVideoPlayer.Configuration) {
+        self.currentMediaPlayer?.stop()
+        self.currentMediaPlayer?.delegate = nil
+        self.currentMediaPlayer = nil
+
+        let media = VLCMedia(url: configuration.url)
         media.addOptions(configuration.options)
 
-        let vlcMediaPlayer = VLCMediaPlayer()
-        vlcMediaPlayer.media = media
-        vlcMediaPlayer.drawable = videoContentView
-        vlcMediaPlayer.delegate = self
+        let newMediaPlayer = VLCMediaPlayer()
+        newMediaPlayer.media = media
+        newMediaPlayer.drawable = videoContentView
+        newMediaPlayer.delegate = self
 
         for child in configuration.playbackChildren {
-            vlcMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
+            newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
         }
 
-        self.mediaPlayer = vlcMediaPlayer
+        self.currentConfiguration = configuration
+        self.currentMediaPlayer = newMediaPlayer
+        self.hasSetDefaultConfiguration = false
+        self.lastPlayerTicks = 0
+        self.lastPlayerState = .opening
 
         if configuration.autoPlay {
-            vlcMediaPlayer.play()
+            newMediaPlayer.play()
         }
     }
 
@@ -99,31 +103,33 @@ public class UIVLCVideoPlayerViewController: UIViewController {
 public extension UIVLCVideoPlayerViewController {
 
     func setupEventSubjectListener() {
-        guard let media = mediaPlayer.media else { return }
-
         delegate.eventSubject.sink { event in
-            guard let event = event else { return }
+            guard let event = event,
+                  let currentMediaPlayer = self.currentMediaPlayer,
+                  let media = currentMediaPlayer.media else { return }
             switch event {
             case .play:
-                self.mediaPlayer.play()
+                currentMediaPlayer.play()
             case .pause:
-                self.mediaPlayer.pause()
+                currentMediaPlayer.pause()
             case .stop:
-                self.mediaPlayer.stop()
+                currentMediaPlayer.stop()
+            case .cancel:
+                currentMediaPlayer.stop()
                 self.cancellables.forEach { $0.cancel() }
             case let .jumpForward(interval):
-                self.mediaPlayer.jumpForward(interval)
+                currentMediaPlayer.jumpForward(interval)
             case let .jumpBackward(interval):
-                self.mediaPlayer.jumpBackward(interval)
+                currentMediaPlayer.jumpBackward(interval)
             case let .setSubtitleTrack(track):
-                let newTrackIndex = self.mediaPlayer.subtitleTrackIndex(from: track)
-                self.mediaPlayer.currentVideoSubTitleIndex = newTrackIndex
+                let newTrackIndex = currentMediaPlayer.subtitleTrackIndex(from: track)
+                currentMediaPlayer.currentVideoSubTitleIndex = newTrackIndex
             case let .setAudioTrack(track):
-                let newTrackIndex = self.mediaPlayer.audioTrackIndex(from: track)
-                self.mediaPlayer.currentAudioTrackIndex = newTrackIndex
+                let newTrackIndex = currentMediaPlayer.audioTrackIndex(from: track)
+                currentMediaPlayer.currentAudioTrackIndex = newTrackIndex
             case let .fastForward(speed):
-                let newSpeed = self.mediaPlayer.fastForwardSpeed(from: speed)
-                self.mediaPlayer.fastForward(atRate: newSpeed)
+                let newSpeed = currentMediaPlayer.fastForwardSpeed(from: speed)
+                currentMediaPlayer.fastForward(atRate: newSpeed)
             case let .aspectFill(fill):
                 if fill {
                     self.fillScreen(screenSize: self.videoContentView.bounds.size)
@@ -131,23 +137,26 @@ public extension UIVLCVideoPlayerViewController {
                     self.shrinkScreen()
                 }
             case let .setTime(time):
-                assert(time.asTicks >= 0 && time.asTicks <= media.length.intValue, "Given time not in range of media length")
-                self.mediaPlayer.time = VLCTime(int: time.asTicks)
+                guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
+                currentMediaPlayer.time = VLCTime(int: time.asTicks)
             case let .setSubtitleSize(size):
-                self.mediaPlayer.setSubtitleSize(size)
+                currentMediaPlayer.setSubtitleSize(size)
             case let .setSubtitleFont(font):
-                self.mediaPlayer.setSubtitleFont(font)
+                currentMediaPlayer.setSubtitleFont(font)
             case let .setSubtitleColor(color):
-                self.mediaPlayer.setSubtitleColor(color)
+                currentMediaPlayer.setSubtitleColor(color)
             case let .addPlaybackChild(child):
-                self.mediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
+                currentMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
+            case let .playNewMedia(newConfiguration):
+                self.setupVLCMediaPlayer(with: newConfiguration)
             }
         }
         .store(in: &cancellables)
     }
 
     private func fillScreen(screenSize: CGSize) {
-        let videoSize = mediaPlayer.videoSize
+        guard let currentMediaPlayer = currentMediaPlayer else { return }
+        let videoSize = currentMediaPlayer.videoSize
         let fillSize = CGSize.aspectFill(aspectRatio: videoSize, minimumSize: screenSize)
 
         let scale: CGFloat
@@ -201,6 +210,7 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         }
 
         return VLCVideoPlayer.PlaybackInformation(
+            currentConfiguration: currentConfiguration,
             position: player.position,
             length: media.length.intValue,
             isSeekable: player.isSeekable,
@@ -229,7 +239,7 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
             lastPlayerTicks = currentTicks
 
             if !hasSetDefaultConfiguration {
-                setDefaultConfiguration(with: player)
+                setDefaultConfiguration(with: player, from: currentConfiguration)
                 hasSetDefaultConfiguration = true
             }
         }
@@ -245,7 +255,7 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         lastPlayerState = player.state
     }
 
-    private func setDefaultConfiguration(with player: VLCMediaPlayer) {
+    private func setDefaultConfiguration(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
         let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
         player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex
 

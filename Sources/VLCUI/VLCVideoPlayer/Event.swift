@@ -5,14 +5,17 @@ public extension VLCVideoPlayer {
 
     // Possible events to send to the underlying VLC media player
     enum Event {
-        /// Play the media
+        /// Play the current media
         case play
 
-        /// Pause the media
+        /// Pause the current media
         case pause
 
-        /// Stop the media and will no longer respond to events
+        /// Stop the current media
         case stop
+
+        /// Stops the current media and stops responding to future events
+        case cancel
 
         /// Jump forward a given amount of seconds
         case jumpForward(Int32)
@@ -53,5 +56,8 @@ public extension VLCVideoPlayer {
 
         /// Add a playback child
         case addPlaybackChild(PlaybackChild)
+
+        /// Play new media given a configuration
+        case playNewMedia(VLCVideoPlayer.Configuration)
     }
 }

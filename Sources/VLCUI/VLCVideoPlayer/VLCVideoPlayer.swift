@@ -5,16 +5,11 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
 
     // MARK: Implementation
 
-    private let playbackURL: URL
-    private var configure: (Configuration) -> Void
+    private var configuration: VLCVideoPlayer.Configuration
     private var delegate: VLCVideoPlayerDelegate
 
     public func makeUIViewController(context: Context) -> UIVLCVideoPlayerViewController {
-        let configuration = VLCVideoPlayer.Configuration()
-        configure(configuration)
-
-        return UIVLCVideoPlayerViewController(
-            url: playbackURL,
+        UIVLCVideoPlayerViewController(
             configuration: configuration,
             delegate: delegate
         )
@@ -24,16 +19,20 @@ public struct VLCVideoPlayer: UIViewControllerRepresentable {
 }
 
 public extension VLCVideoPlayer {
+
     init(url: URL) {
-        self.playbackURL = url
-        self.configure = { _ in }
+        self.configuration = VLCVideoPlayer.Configuration(url: url)
         self.delegate = DefaultVideoPlayerDelegate()
     }
 
-    func configure(_ configure: @escaping (VLCVideoPlayer.Configuration) -> Void) -> Self {
-        var copy = self
-        copy.configure = configure
-        return copy
+    init(configuration: VLCVideoPlayer.Configuration) {
+        self.configuration = configuration
+        self.delegate = DefaultVideoPlayerDelegate()
+    }
+
+    init(_ configure: @escaping () -> VLCVideoPlayer.Configuration) {
+        self.configuration = configure()
+        self.delegate = DefaultVideoPlayerDelegate()
     }
 
     func delegate(_ delegate: VLCVideoPlayerDelegate) -> Self {
