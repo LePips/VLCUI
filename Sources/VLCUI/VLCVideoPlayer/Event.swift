@@ -36,8 +36,9 @@ public extension VLCVideoPlayer {
         /// Fast forward at a given rate
         case fastForward(ValueSelector<Float>)
 
-        /// Aspect fill depending on the video's content size and the view's bounds
-        case aspectFill(Bool)
+        /// Aspect fill depending on the video's content size and the view's bounds, based
+        /// on the given percentage of completion
+        case aspectFill(Float)
 
         /// Set the player time
         case setTime(TimeSelector)

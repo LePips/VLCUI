@@ -24,6 +24,13 @@ public class UIVLCVideoPlayerViewController: UIViewController {
     private var lastPlayerState: VLCMediaPlayerState = .opening
     private var cancellables = Set<AnyCancellable>()
 
+    private var aspectFillScale: CGFloat {
+        guard let currentMediaPlayer = currentMediaPlayer else { return 1 }
+        let videoSize = currentMediaPlayer.videoSize
+        let fillSize = CGSize.aspectFill(aspectRatio: videoSize, minimumSize: videoContentView.bounds.size)
+        return fillSize.scale(other: videoContentView.bounds.size)
+    }
+
     init(
         configuration: VLCVideoPlayer.Configuration,
         delegate: VLCVideoPlayerDelegate
@@ -64,7 +71,6 @@ public class UIVLCVideoPlayerViewController: UIViewController {
 
     private func setupVLCMediaPlayer(with configuration: VLCVideoPlayer.Configuration) {
         self.currentMediaPlayer?.stop()
-        self.currentMediaPlayer?.delegate = nil
         self.currentMediaPlayer = nil
 
         let media = VLCMedia(url: configuration.url)
@@ -131,11 +137,9 @@ public extension UIVLCVideoPlayerViewController {
                 let newSpeed = currentMediaPlayer.fastForwardSpeed(from: speed)
                 currentMediaPlayer.fastForward(atRate: newSpeed)
             case let .aspectFill(fill):
-                if fill {
-                    self.fillScreen(screenSize: self.videoContentView.bounds.size)
-                } else {
-                    self.shrinkScreen()
-                }
+                guard fill >= 0 && fill <= 1 else { return }
+                let scale = 1 + CGFloat(fill) * (self.aspectFillScale - 1)
+                self.videoContentView.transform = CGAffineTransform(scaleX: scale, y: scale)
             case let .setTime(time):
                 guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
                 currentMediaPlayer.time = VLCTime(int: time.asTicks)
@@ -152,30 +156,6 @@ public extension UIVLCVideoPlayerViewController {
             }
         }
         .store(in: &cancellables)
-    }
-
-    private func fillScreen(screenSize: CGSize) {
-        guard let currentMediaPlayer = currentMediaPlayer else { return }
-        let videoSize = currentMediaPlayer.videoSize
-        let fillSize = CGSize.aspectFill(aspectRatio: videoSize, minimumSize: screenSize)
-
-        let scale: CGFloat
-
-        if fillSize.height > screenSize.height {
-            scale = fillSize.height / screenSize.height
-        } else {
-            scale = fillSize.width / screenSize.width
-        }
-
-        UIView.animate(withDuration: 0.2) {
-            self.videoContentView.transform = CGAffineTransform(scaleX: scale, y: scale)
-        }
-    }
-
-    private func shrinkScreen() {
-        UIView.animate(withDuration: 0.2) {
-            self.videoContentView.transform = .identity
-        }
     }
 }
 
@@ -256,6 +236,18 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
     }
 
     private func setDefaultConfiguration(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
+
+        player.time = VLCTime(int: configuration.startTime.asTicks)
+
+        let defaultPlayerSpeed = player.fastForwardSpeed(from: configuration.playbackSpeed)
+        player.fastForward(atRate: defaultPlayerSpeed)
+
+        if configuration.aspectFill {
+            self.videoContentView.transform = CGAffineTransform(scaleX: aspectFillScale, y: aspectFillScale)
+        } else {
+            self.videoContentView.transform = .identity
+        }
+
         let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
         player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex
 
@@ -265,10 +257,5 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         player.setSubtitleSize(configuration.subtitleSize)
         player.setSubtitleFont(configuration.subtitleFont)
         player.setSubtitleColor(configuration.subtitleColor)
-
-        player.time = VLCTime(int: configuration.startTime.asTicks)
-
-        let defaultPlayerSpeed = player.fastForwardSpeed(from: configuration.playbackSpeed)
-        player.fastForward(atRate: defaultPlayerSpeed)
     }
 }

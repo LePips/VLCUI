@@ -8,6 +8,7 @@ public extension VLCVideoPlayer {
         public var url: URL
         public var autoPlay: Bool = false
         public var startTime: TimeSelector = .ticks(0)
+        public var aspectFill: Bool = false
         public var playbackSpeed: ValueSelector<Float> = .auto
         public var subtitleIndex: ValueSelector<Int32> = .auto
         public var audioIndex: ValueSelector<Int32> = .auto
