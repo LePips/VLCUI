@@ -74,7 +74,7 @@ struct OverlayView: View {
         }
         .onChange(of: isScrubbing) { isScrubbing in
             guard !isScrubbing else { return }
-//            self.viewModel.eventSubject.send(.setTicks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
+            self.viewModel.eventSubject.send(.setTime(.ticks(viewModel.totalTicks * Int32(currentPosition * 100) / 100)))
         }
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }

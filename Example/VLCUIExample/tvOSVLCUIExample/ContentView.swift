@@ -8,11 +8,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            VLCVideoPlayer(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
+            VLCVideoPlayer(configuration: viewModel.configuration)
                 .delegate(viewModel)
-                .configure { configuration in
-                    configuration.autoPlay = true
-                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea()
 

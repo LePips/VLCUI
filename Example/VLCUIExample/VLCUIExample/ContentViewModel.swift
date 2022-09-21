@@ -15,6 +15,13 @@ class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
 
     var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never> = .init(nil)
 
+    var configuration: VLCVideoPlayer.Configuration {
+        let configuration = VLCVideoPlayer
+            .Configuration(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
+        configuration.autoPlay = true
+        return configuration
+    }
+
     func setCustomPosition(_ position: Float) {
         self.position = position
     }
@@ -26,7 +33,7 @@ class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
         self.totalTicks = playbackInformation.length
     }
 
-    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State) {
+    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {
         self.playerState = state
 
         if state == .error {
