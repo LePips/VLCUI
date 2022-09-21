@@ -7,21 +7,21 @@ public struct VLCVideoPlayer: _PlatformRepresentable {
 
     private var configuration: VLCVideoPlayer.Configuration
     private var delegate: VLCVideoPlayerDelegate
-    
+
     #if os(macOS)
     public func makeNSView(context: Context) -> UIVLCVideoPlayerView {
         makeVideoPlayerView()
     }
-    
-    public func updateNSView(_ nsView: UIVLCVideoPlayerView, context: Context) { }
+
+    public func updateNSView(_ nsView: UIVLCVideoPlayerView, context: Context) {}
     #else
     public func makeUIView(context: Context) -> UIVLCVideoPlayerView {
         makeVideoPlayerView()
     }
 
-    public func updateUIView(_ uiView: UIVLCVideoPlayerView, context: Context) { }
+    public func updateUIView(_ uiView: UIVLCVideoPlayerView, context: Context) {}
     #endif
-    
+
     private func makeVideoPlayerView() -> UIVLCVideoPlayerView {
         UIVLCVideoPlayerView(
             configuration: configuration,

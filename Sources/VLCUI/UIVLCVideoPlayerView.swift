@@ -46,9 +46,8 @@ public class UIVLCVideoPlayerView: _PlatformView {
         self.delegate = delegate
         self.currentMediaPlayer = nil
         super.init(frame: .zero)
-        
+
         setupVideoContentView()
-        
 
 //        backgroundColor = .clear
 //        view.accessibilityIgnoresInvertColors = true

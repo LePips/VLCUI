@@ -7,7 +7,7 @@ import UIKit
 #endif
 
 extension _PlatformView {
-    
+
     func apply(transform: CGAffineTransform) {
         #if os(macOS)
         layer?.setAffineTransform(transform)
