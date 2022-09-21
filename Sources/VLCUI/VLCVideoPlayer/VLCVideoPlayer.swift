@@ -1,21 +1,33 @@
 import Foundation
 import SwiftUI
 
-public struct VLCVideoPlayer: UIViewControllerRepresentable {
+public struct VLCVideoPlayer: _PlatformRepresentable {
 
     // MARK: Implementation
 
     private var configuration: VLCVideoPlayer.Configuration
     private var delegate: VLCVideoPlayerDelegate
+    
+    #if os(macOS)
+    public func makeNSView(context: Context) -> UIVLCVideoPlayerView {
+        makeVideoPlayerView()
+    }
+    
+    public func updateNSView(_ nsView: UIVLCVideoPlayerView, context: Context) { }
+    #else
+    public func makeUIView(context: Context) -> UIVLCVideoPlayerView {
+        makeVideoPlayerView()
+    }
 
-    public func makeUIViewController(context: Context) -> UIVLCVideoPlayerViewController {
-        UIVLCVideoPlayerViewController(
+    public func updateUIView(_ uiView: UIVLCVideoPlayerView, context: Context) { }
+    #endif
+    
+    private func makeVideoPlayerView() -> UIVLCVideoPlayerView {
+        UIVLCVideoPlayerView(
             configuration: configuration,
             delegate: delegate
         )
     }
-
-    public func updateUIViewController(_ uiViewController: UIVLCVideoPlayerViewController, context: Context) {}
 }
 
 public extension VLCVideoPlayer {

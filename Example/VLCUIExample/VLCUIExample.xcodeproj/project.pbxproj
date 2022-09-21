@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		E1734C9528D50EE0007B9768 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1734C9428D50EE0007B9768 /* ContentViewModel.swift */; };
+		E17AA39628DBB7C5009D4775 /* macOSVLCUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17AA39528DBB7C5009D4775 /* macOSVLCUIExampleApp.swift */; };
+		E17AA39828DBB7C5009D4775 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17AA39728DBB7C5009D4775 /* ContentView.swift */; };
+		E17AA39A28DBB7C6009D4775 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E17AA39928DBB7C6009D4775 /* Assets.xcassets */; };
+		E17AA39D28DBB7C6009D4775 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E17AA39C28DBB7C6009D4775 /* Preview Assets.xcassets */; };
+		E17AA3A328DBB7D8009D4775 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1734C9428D50EE0007B9768 /* ContentViewModel.swift */; };
 		E18A8E8628D64CA000333B9A /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; };
 		E18A8E8728D64CA000333B9A /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CEFEB28D50F1500ADF78E /* VLCUI */; };
@@ -25,6 +30,13 @@
 		E1A52CCF28D50E95009BB067 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A52CCE28D50E95009BB067 /* ContentView.swift */; };
 		E1A52CD128D50E96009BB067 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A52CD028D50E96009BB067 /* Assets.xcassets */; };
 		E1A52CD428D50E96009BB067 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A52CD328D50E96009BB067 /* Preview Assets.xcassets */; };
+		E1CBF2AA28DBBBE700D6724D /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E1CBF2A928DBBBE700D6724D /* VLCUI */; };
+		E1CBF2AC28DBBC5900D6724D /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CBF2AB28DBBC5900D6724D /* VLCKit.xcframework */; };
+		E1CBF2AD28DBBC5900D6724D /* VLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E1CBF2AB28DBBC5900D6724D /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E1CBF2B028DBBFDF00D6724D /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CBF2AF28DBBFDF00D6724D /* OverlayView.swift */; };
+		E1CBF2B228DBC02000D6724D /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CBF2B128DBC02000D6724D /* IntExtensions.swift */; };
+		E1CBF2B328DBC02B00D6724D /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CBF2B128DBC02000D6724D /* IntExtensions.swift */; };
+		E1CBF2B428DBC02C00D6724D /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CBF2B128DBC02000D6724D /* IntExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,11 +62,28 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1CBF2AE28DBBC5900D6724D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E1CBF2AD28DBBC5900D6724D /* VLCKit.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E1734C9428D50EE0007B9768 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		E1734C9728D50EFE007B9768 /* VLCUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = VLCUI; path = ../..; sourceTree = "<group>"; };
+		E17AA39328DBB7C5009D4775 /* macOSVLCUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOSVLCUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E17AA39528DBB7C5009D4775 /* macOSVLCUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macOSVLCUIExampleApp.swift; sourceTree = "<group>"; };
+		E17AA39728DBB7C5009D4775 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E17AA39928DBB7C6009D4775 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E17AA39C28DBB7C6009D4775 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E17AA39E28DBB7C6009D4775 /* macOSVLCUIExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSVLCUIExample.entitlements; sourceTree = "<group>"; };
 		E19CEFE928D50F1100ADF78E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E19CEFED28D50F2A00ADF78E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Carthage/Build/MobileVLCKit.xcframework; sourceTree = "<group>"; };
@@ -70,9 +99,22 @@
 		E1A52CCE28D50E95009BB067 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E1A52CD028D50E96009BB067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1A52CD328D50E96009BB067 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E1CBF2A828DBBBDD00D6724D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E1CBF2AB28DBBC5900D6724D /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
+		E1CBF2AF28DBBFDF00D6724D /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		E1CBF2B128DBC02000D6724D /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E17AA39028DBB7C5009D4775 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1CBF2AC28DBBC5900D6724D /* VLCKit.xcframework in Frameworks */,
+				E1CBF2AA28DBBBE700D6724D /* VLCUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E19CEFF428D5101B00ADF78E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -102,9 +144,42 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		E17AA39428DBB7C5009D4775 /* macOSVLCUIExample */ = {
+			isa = PBXGroup;
+			children = (
+				E1CBF2A828DBBBDD00D6724D /* Info.plist */,
+				E17AA39528DBB7C5009D4775 /* macOSVLCUIExampleApp.swift */,
+				E17AA39728DBB7C5009D4775 /* ContentView.swift */,
+				E1CBF2AF28DBBFDF00D6724D /* OverlayView.swift */,
+				E17AA39928DBB7C6009D4775 /* Assets.xcassets */,
+				E17AA39E28DBB7C6009D4775 /* macOSVLCUIExample.entitlements */,
+				E17AA39B28DBB7C6009D4775 /* Preview Content */,
+			);
+			path = macOSVLCUIExample;
+			sourceTree = "<group>";
+		};
+		E17AA39B28DBB7C6009D4775 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E17AA39C28DBB7C6009D4775 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E17AA3A228DBB7CC009D4775 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E1734C9428D50EE0007B9768 /* ContentViewModel.swift */,
+				E1CBF2B128DBC02000D6724D /* IntExtensions.swift */,
+			);
+			name = Shared;
+			path = VLCUIExample/Shared;
+			sourceTree = "<group>";
+		};
 		E19CEFEA28D50F1500ADF78E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E1CBF2AB28DBBC5900D6724D /* VLCKit.xcframework */,
 				E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */,
 				E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */,
 			);
@@ -137,6 +212,8 @@
 				E1734C9628D50EFE007B9768 /* Packages */,
 				E1A52CCB28D50E95009BB067 /* VLCUIExample */,
 				E19CEFF828D5101B00ADF78E /* tvOSVLCUIExample */,
+				E17AA39428DBB7C5009D4775 /* macOSVLCUIExample */,
+				E17AA3A228DBB7CC009D4775 /* Shared */,
 				E1A52CCA28D50E95009BB067 /* Products */,
 				E19CEFEA28D50F1500ADF78E /* Frameworks */,
 			);
@@ -147,6 +224,7 @@
 			children = (
 				E1A52CC928D50E95009BB067 /* VLCUIExample.app */,
 				E19CEFF728D5101B00ADF78E /* tvOSVLCUIExample.app */,
+				E17AA39328DBB7C5009D4775 /* macOSVLCUIExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,7 +235,6 @@
 				E19CEFE928D50F1100ADF78E /* Info.plist */,
 				E1A52CCC28D50E95009BB067 /* VLCUIExampleApp.swift */,
 				E1A52CCE28D50E95009BB067 /* ContentView.swift */,
-				E1734C9428D50EE0007B9768 /* ContentViewModel.swift */,
 				E19CEFED28D50F2A00ADF78E /* OverlayView.swift */,
 				E1A52CD028D50E96009BB067 /* Assets.xcassets */,
 				E1A52CD228D50E96009BB067 /* Preview Content */,
@@ -176,6 +253,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E17AA39228DBB7C5009D4775 /* macOSVLCUIExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E17AA3A128DBB7C6009D4775 /* Build configuration list for PBXNativeTarget "macOSVLCUIExample" */;
+			buildPhases = (
+				E17AA38F28DBB7C5009D4775 /* Sources */,
+				E17AA39028DBB7C5009D4775 /* Frameworks */,
+				E17AA39128DBB7C5009D4775 /* Resources */,
+				E1CBF2AE28DBBC5900D6724D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = macOSVLCUIExample;
+			packageProductDependencies = (
+				E1CBF2A928DBBBE700D6724D /* VLCUI */,
+			);
+			productName = macOSVLCUIExample;
+			productReference = E17AA39328DBB7C5009D4775 /* macOSVLCUIExample.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E19CEFF628D5101B00ADF78E /* tvOSVLCUIExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E19CF00228D5101C00ADF78E /* Build configuration list for PBXNativeTarget "tvOSVLCUIExample" */;
@@ -228,6 +326,9 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					E17AA39228DBB7C5009D4775 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					E19CEFF628D5101B00ADF78E = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
@@ -251,11 +352,21 @@
 			targets = (
 				E1A52CC828D50E95009BB067 /* VLCUIExample */,
 				E19CEFF628D5101B00ADF78E /* tvOSVLCUIExample */,
+				E17AA39228DBB7C5009D4775 /* macOSVLCUIExample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E17AA39128DBB7C5009D4775 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E17AA39D28DBB7C6009D4775 /* Preview Assets.xcassets in Resources */,
+				E17AA39A28DBB7C6009D4775 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E19CEFF528D5101B00ADF78E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -277,10 +388,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E17AA38F28DBB7C5009D4775 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1CBF2B228DBC02000D6724D /* IntExtensions.swift in Sources */,
+				E17AA39828DBB7C5009D4775 /* ContentView.swift in Sources */,
+				E1CBF2B028DBBFDF00D6724D /* OverlayView.swift in Sources */,
+				E17AA39628DBB7C5009D4775 /* macOSVLCUIExampleApp.swift in Sources */,
+				E17AA3A328DBB7D8009D4775 /* ContentViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E19CEFF328D5101B00ADF78E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1CBF2B428DBC02C00D6724D /* IntExtensions.swift in Sources */,
 				E19CF00D28D5108600ADF78E /* ContentViewModel.swift in Sources */,
 				E19CF00C28D5106600ADF78E /* OverlayView.swift in Sources */,
 				E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */,
@@ -292,6 +416,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1CBF2B328DBC02B00D6724D /* IntExtensions.swift in Sources */,
 				E1A52CCF28D50E95009BB067 /* ContentView.swift in Sources */,
 				E19CEFEE28D50F2A00ADF78E /* OverlayView.swift in Sources */,
 				E1A52CCD28D50E95009BB067 /* VLCUIExampleApp.swift in Sources */,
@@ -302,6 +427,62 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		E17AA39F28DBB7C6009D4775 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOSVLCUIExample/macOSVLCUIExample.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"macOSVLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = macOSVLCUIExample/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.macOSVLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E17AA3A028DBB7C6009D4775 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOSVLCUIExample/macOSVLCUIExample.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"macOSVLCUIExample/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = macOSVLCUIExample/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = example.macOSVLCUIExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		E19CF00328D5101C00ADF78E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -478,7 +659,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TY84JMYEFE;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -510,7 +691,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VLCUIExample/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TY84JMYEFE;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -537,6 +718,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E17AA3A128DBB7C6009D4775 /* Build configuration list for PBXNativeTarget "macOSVLCUIExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E17AA39F28DBB7C6009D4775 /* Debug */,
+				E17AA3A028DBB7C6009D4775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E19CF00228D5101C00ADF78E /* Build configuration list for PBXNativeTarget "tvOSVLCUIExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -572,6 +762,10 @@
 			productName = VLCUI;
 		};
 		E19CF00528D5103600ADF78E /* VLCUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCUI;
+		};
+		E1CBF2A928DBBBE700D6724D /* VLCUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = VLCUI;
 		};

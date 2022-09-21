@@ -1,5 +1,10 @@
 import Foundation
+
+#if os(macOS)
+import AppKit
+#else
 import UIKit
+#endif
 
 public extension VLCVideoPlayer {
 
@@ -13,8 +18,8 @@ public extension VLCVideoPlayer {
         public var subtitleIndex: ValueSelector<Int32> = .auto
         public var audioIndex: ValueSelector<Int32> = .auto
         public var subtitleSize: ValueSelector<Int> = .auto
-        public var subtitleFont: ValueSelector<UIFont> = .auto
-        public var subtitleColor: ValueSelector<UIColor> = .auto
+        public var subtitleFont: ValueSelector<_PlatformFont> = .auto
+        public var subtitleColor: ValueSelector<_PlatformColor> = .auto
         public var playbackChildren: [PlaybackChild] = []
         public var options: [String: Any] = [:]
 

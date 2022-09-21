@@ -1,7 +1,12 @@
 import Foundation
+
+#if os(macOS)
+import AppKit
+#else
 import UIKit
+#endif
 
-extension UIFont {
+extension _PlatformFont {
 
-    static let defaultSubtitleFont = UIFont.systemFont(ofSize: 14)
+    static let defaultSubtitleFont = _PlatformFont.systemFont(ofSize: 14)
 }

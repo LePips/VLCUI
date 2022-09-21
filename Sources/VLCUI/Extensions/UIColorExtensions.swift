@@ -1,10 +1,19 @@
 import Foundation
-import UIKit
 
-extension UIColor {
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
+extension _PlatformColor {
 
     var coreImageColor: CIColor {
+        #if os(macOS)
+        CIColor(color: self)!
+        #else
         CIColor(color: self)
+        #endif
     }
 
     var hex: UInt {

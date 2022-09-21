@@ -1,6 +1,8 @@
 import Foundation
 
-#if os(tvOS)
+#if os(macOS)
+import VLCKit
+#elseif os(tvOS)
 import TVVLCKit
 #else
 import MobileVLCKit

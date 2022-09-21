@@ -1,7 +1,14 @@
 import Foundation
-import UIKit
 
-#if os(tvOS)
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
+#if os(macOS)
+import VLCKit
+#elseif os(tvOS)
 import TVVLCKit
 #else
 import MobileVLCKit
@@ -19,42 +26,48 @@ extension VLCMediaPlayer {
             value = size
         }
 
+        #if !os(macOS)
         perform(
             Selector(("setTextRendererFontSize:")),
             with: value
         )
+        #endif
     }
 
-    func setSubtitleFont(_ font: VLCVideoPlayer.ValueSelector<UIFont>) {
+    func setSubtitleFont(_ font: VLCVideoPlayer.ValueSelector<_PlatformFont>) {
         let value: String
 
         switch font {
         case .auto:
-            value = UIFont.defaultSubtitleFont.fontName
+            value = _PlatformFont.defaultSubtitleFont.fontName
         case let .absolute(font):
             value = font.fontName
         }
 
+        #if !os(macOS)
         perform(
             Selector(("setTextRendererFont:")),
             with: value
         )
+        #endif
     }
 
-    func setSubtitleColor(_ color: VLCVideoPlayer.ValueSelector<UIColor>) {
+    func setSubtitleColor(_ color: VLCVideoPlayer.ValueSelector<_PlatformColor>) {
         let value: UInt
 
         switch color {
         case .auto:
-            value = UIColor.white.hex
+            value = _PlatformColor.white.hex
         case let .absolute(fontColor):
             value = fontColor.hex
         }
 
+        #if !os(macOS)
         perform(
             Selector(("setTextRendererFontColor:")),
             with: value
         )
+        #endif
     }
 
     func subtitleTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int32>) -> Int32 {

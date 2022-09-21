@@ -10,10 +10,11 @@ struct ContentView: View {
         ZStack(alignment: .bottom) {
             VLCVideoPlayer(configuration: viewModel.configuration)
                 .delegate(viewModel)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()
 
             OverlayView(viewModel: viewModel)
+                .padding()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
     }
 }

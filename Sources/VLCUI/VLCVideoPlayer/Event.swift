@@ -1,5 +1,10 @@
 import Foundation
+
+#if os(macOS)
+import AppKit
+#else
 import UIKit
+#endif
 
 public extension VLCVideoPlayer {
 
@@ -61,10 +66,10 @@ public extension VLCVideoPlayer {
         case setSubtitleSize(ValueSelector<Int>)
 
         /// Set the subtitle font using the font name of the given `UIFont`
-        case setSubtitleFont(ValueSelector<UIFont>)
+        case setSubtitleFont(ValueSelector<_PlatformFont>)
 
         /// Set the subtitle font color using the RGB values of the given `UIColor`
-        case setSubtitleColor(ValueSelector<UIColor>)
+        case setSubtitleColor(ValueSelector<_PlatformColor>)
 
         /// Add a playback child
         case addPlaybackChild(PlaybackChild)

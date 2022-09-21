@@ -1,9 +1,16 @@
 import Combine
 import Foundation
 import MediaPlayer
-import UIKit
 
-#if os(tvOS)
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
+#if os(macOS)
+import VLCKit
+#elseif os(tvOS)
 import TVVLCKit
 #else
 import MobileVLCKit
@@ -11,7 +18,7 @@ import MobileVLCKit
 
 // TODO: Cleanup constructPlaybackInformation
 
-public class UIVLCVideoPlayerViewController: UIViewController {
+public class UIVLCVideoPlayerView: _PlatformView {
 
     private lazy var videoContentView = makeVideoContentView()
 
@@ -38,7 +45,13 @@ public class UIVLCVideoPlayerViewController: UIViewController {
         self.currentConfiguration = configuration
         self.delegate = delegate
         self.currentMediaPlayer = nil
-        super.init(nibName: nil, bundle: nil)
+        super.init(frame: .zero)
+        
+        setupVideoContentView()
+        
+
+//        backgroundColor = .clear
+//        view.accessibilityIgnoresInvertColors = true
 
         setupVLCMediaPlayer(with: configuration)
         setupEventSubjectListener()
@@ -49,23 +62,14 @@ public class UIVLCVideoPlayerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-
-        setupVideoContentView()
-
-        view.backgroundColor = .clear
-        view.accessibilityIgnoresInvertColors = true
-    }
-
     private func setupVideoContentView() {
-        view.addSubview(videoContentView)
+        addSubview(videoContentView)
 
         NSLayoutConstraint.activate([
-            videoContentView.topAnchor.constraint(equalTo: view.topAnchor),
-            videoContentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            videoContentView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            videoContentView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            videoContentView.topAnchor.constraint(equalTo: topAnchor),
+            videoContentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            videoContentView.leftAnchor.constraint(equalTo: leftAnchor),
+            videoContentView.rightAnchor.constraint(equalTo: rightAnchor),
         ])
     }
 
@@ -96,17 +100,17 @@ public class UIVLCVideoPlayerViewController: UIViewController {
         }
     }
 
-    private func makeVideoContentView() -> UIView {
-        let view = UIView()
+    private func makeVideoContentView() -> _PlatformView {
+        let view = _PlatformView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
+//        view.backgroundColor = .black
         return view
     }
 }
 
 // MARK: Event Listener
 
-public extension UIVLCVideoPlayerViewController {
+public extension UIVLCVideoPlayerView {
 
     func setupEventSubjectListener() {
         delegate.eventSubject.sink { event in
@@ -147,7 +151,7 @@ public extension UIVLCVideoPlayerViewController {
             case let .aspectFill(fill):
                 guard fill >= 0 && fill <= 1 else { return }
                 let scale = 1 + CGFloat(fill) * (self.aspectFillScale - 1)
-                self.videoContentView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.videoContentView.apply(transform: CGAffineTransform(scaleX: scale, y: scale))
             case let .setTime(time):
                 guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
                 currentMediaPlayer.time = VLCTime(int: time.asTicks)
@@ -169,7 +173,7 @@ public extension UIVLCVideoPlayerViewController {
 
 // MARK: VLCMediaPlayerDelegate
 
-extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
+extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     private func constructPlaybackInformation(player: VLCMediaPlayer, media: VLCMedia) -> VLCVideoPlayer.PlaybackInformation {
 
@@ -252,9 +256,9 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         player.fastForward(atRate: defaultPlayerSpeed)
 
         if configuration.aspectFill {
-            self.videoContentView.transform = CGAffineTransform(scaleX: aspectFillScale, y: aspectFillScale)
+            videoContentView.apply(transform: CGAffineTransform(scaleX: aspectFillScale, y: aspectFillScale))
         } else {
-            self.videoContentView.transform = .identity
+            videoContentView.apply(transform: .identity)
         }
 
         let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
