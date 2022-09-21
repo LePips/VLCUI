@@ -9,8 +9,8 @@ public extension VLCVideoPlayer {
         public let isSeekable: Bool
         public let playbackRate: Float
 
-        public let currentSubtitleTrack: (Int32, String)
-        public let currentAudioTrack: (Int32, String)
+        public let currentSubtitleTrack: MediaTrack
+        public let currentAudioTrack: MediaTrack
         public let subtitleTracks: [Int32: String]
         public let audioTracks: [Int32: String]
 

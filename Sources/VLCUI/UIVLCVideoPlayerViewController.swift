@@ -182,19 +182,19 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         let zippedSubtitleTracks = Dictionary(uniqueKeysWithValues: zip(subtitleIndexes, subtitleNames))
         let zippedAudioTracks = Dictionary(uniqueKeysWithValues: zip(audioIndexes, audioNames))
 
-        let currentSubtitleTrack: (Int32, String)
-        let currentAudioTrack: (Int32, String)
+        let currentSubtitleTrack: MediaTrack
+        let currentAudioTrack: MediaTrack
 
         if let currentValidSubtitleTrack = zippedSubtitleTracks[player.currentVideoSubTitleIndex] {
             currentSubtitleTrack = (player.currentVideoSubTitleIndex, currentValidSubtitleTrack)
         } else {
-            currentSubtitleTrack = (-1, "Disable")
+            currentSubtitleTrack = (index: -1, title: "Disable")
         }
 
         if let currentValidAudioTrack = zippedAudioTracks[player.currentAudioTrackIndex] {
             currentAudioTrack = (player.currentAudioTrackIndex, currentValidAudioTrack)
         } else {
-            currentAudioTrack = (-1, "Disable")
+            currentAudioTrack = (index: -1, title: "Disable")
         }
 
         return VLCVideoPlayer.PlaybackInformation(
