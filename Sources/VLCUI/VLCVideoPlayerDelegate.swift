@@ -10,12 +10,12 @@ public protocol VLCVideoPlayerDelegate {
     func vlcVideoPlayer(didUpdateTicks ticks: Int32, with playbackInformation: VLCVideoPlayer.PlaybackInformation)
 
     /// Called when the VLCVideoPlayer state has been updated
-    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State)
+    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State, with playbackInformation: VLCVideoPlayer.PlaybackInformation)
 }
 
 public extension VLCVideoPlayerDelegate {
     func vlcVideoPlayer(didUpdateTicks ticks: Int32, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {}
-    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State) {}
+    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {}
 }
 
 class DefaultVideoPlayerDelegate: VLCVideoPlayerDelegate {

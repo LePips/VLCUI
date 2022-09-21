@@ -222,7 +222,7 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         )
 
         if lastPlayerState != .playing && abs(currentTicks - lastPlayerTicks) >= 200 {
-            delegate.vlcVideoPlayer(didUpdateState: .playing)
+            delegate.vlcVideoPlayer(didUpdateState: .playing, with: playbackInformation)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
 
@@ -238,8 +238,9 @@ extension UIVLCVideoPlayerViewController: VLCMediaPlayerDelegate {
         guard player.state != .playing, player.state != lastPlayerState else { return }
 
         let wrappedState = VLCVideoPlayer.State(rawValue: player.state.rawValue) ?? .error
+        let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        delegate.vlcVideoPlayer(didUpdateState: wrappedState)
+        delegate.vlcVideoPlayer(didUpdateState: wrappedState, with: playbackInformation)
         lastPlayerState = player.state
     }
 
