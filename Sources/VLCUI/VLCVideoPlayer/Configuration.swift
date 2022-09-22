@@ -22,6 +22,8 @@ public extension VLCVideoPlayer {
         public var subtitleColor: ValueSelector<_PlatformColor> = .auto
         public var playbackChildren: [PlaybackChild] = []
         public var options: [String: Any] = [:]
+        public var isLogging: Bool = false
+        public var loggingLevel: LoggingLevel = .info
 
         public init(url: URL) {
             self.url = url

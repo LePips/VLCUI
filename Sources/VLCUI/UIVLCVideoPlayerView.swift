@@ -24,6 +24,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private var currentConfiguration: VLCVideoPlayer.Configuration
     private let delegate: VLCVideoPlayerDelegate
+    private let logger: VLCVideoPlayerLogger
     private var currentMediaPlayer: VLCMediaPlayer?
 
     private var hasSetDefaultConfiguration: Bool = false
@@ -40,10 +41,12 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     init(
         configuration: VLCVideoPlayer.Configuration,
-        delegate: VLCVideoPlayerDelegate
+        delegate: VLCVideoPlayerDelegate,
+        logger: VLCVideoPlayerLogger
     ) {
         self.currentConfiguration = configuration
         self.delegate = delegate
+        self.logger = logger
         self.currentMediaPlayer = nil
         super.init(frame: .zero)
 
@@ -85,6 +88,10 @@ public class UIVLCVideoPlayerView: _PlatformView {
         newMediaPlayer.media = media
         newMediaPlayer.drawable = videoContentView
         newMediaPlayer.delegate = self
+
+        newMediaPlayer.libraryInstance.debugLogging = configuration.isLogging
+        newMediaPlayer.libraryInstance.debugLoggingLevel = 3
+        newMediaPlayer.libraryInstance.debugLoggingTarget = self
 
         for child in configuration.playbackChildren {
             newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
@@ -276,5 +283,16 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         player.setSubtitleSize(configuration.subtitleSize)
         player.setSubtitleFont(configuration.subtitleFont)
         player.setSubtitleColor(configuration.subtitleColor)
+    }
+}
+
+// MARK: VLCLibraryLogReceiverProtocol
+
+extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
+
+    public func handleMessage(_ message: String, debugLevel level: Int32) {
+        guard level >= currentConfiguration.loggingLevel.rawValue else { return }
+        let level = VLCVideoPlayer.LoggingLevel(rawValue: level) ?? .info
+        self.logger.vlcVideoPlayer(didLog: message, at: level)
     }
 }
