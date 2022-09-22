@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E15FF6EA28DC24A30074328C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A52CCE28D50E95009BB067 /* ContentView.swift */; };
+		E15FF6EB28DC24A30074328C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A52CCE28D50E95009BB067 /* ContentView.swift */; };
 		E17AA39628DBB7C5009D4775 /* macOSExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17AA39528DBB7C5009D4775 /* macOSExample.swift */; };
-		E17AA39828DBB7C5009D4775 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17AA39728DBB7C5009D4775 /* ContentView.swift */; };
 		E17AA39A28DBB7C6009D4775 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E17AA39928DBB7C6009D4775 /* Assets.xcassets */; };
 		E18A8E8628D64CA000333B9A /* MobileVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; };
 		E18A8E8728D64CA000333B9A /* MobileVLCKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E19CEFEC28D50F1500ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CEFEB28D50F1500ADF78E /* VLCUI */; };
 		E19CEFEE28D50F2A00ADF78E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFED28D50F2A00ADF78E /* OverlayView.swift */; };
 		E19CEFFA28D5101B00ADF78E /* tvOSExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFF928D5101B00ADF78E /* tvOSExample.swift */; };
-		E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CEFFB28D5101B00ADF78E /* ContentView.swift */; };
 		E19CEFFE28D5101C00ADF78E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E19CEFFD28D5101C00ADF78E /* Assets.xcassets */; };
 		E19CF00628D5103600ADF78E /* VLCUI in Frameworks */ = {isa = PBXBuildFile; productRef = E19CF00528D5103600ADF78E /* VLCUI */; };
 		E19CF00828D5103B00ADF78E /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */; };
@@ -76,7 +76,6 @@
 		E1734C9728D50EFE007B9768 /* VLCUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = VLCUI; path = ../..; sourceTree = "<group>"; };
 		E17AA39328DBB7C5009D4775 /* macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E17AA39528DBB7C5009D4775 /* macOSExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macOSExample.swift; sourceTree = "<group>"; };
-		E17AA39728DBB7C5009D4775 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E17AA39928DBB7C6009D4775 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E17AA39E28DBB7C6009D4775 /* macOSExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSExample.entitlements; sourceTree = "<group>"; };
 		E19CEFE928D50F1100ADF78E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -84,7 +83,6 @@
 		E19CEFEF28D50FE000ADF78E /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MobileVLCKit.xcframework; path = Carthage/Build/MobileVLCKit.xcframework; sourceTree = "<group>"; };
 		E19CEFF728D5101B00ADF78E /* tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tvOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E19CEFF928D5101B00ADF78E /* tvOSExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tvOSExample.swift; sourceTree = "<group>"; };
-		E19CEFFB28D5101B00ADF78E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E19CEFFD28D5101C00ADF78E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E19CF00728D5103B00ADF78E /* TVVLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = Carthage/Build/TVVLCKit.xcframework; sourceTree = "<group>"; };
 		E19CF00B28D5106600ADF78E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
@@ -142,7 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				E17AA39528DBB7C5009D4775 /* macOSExample.swift */,
-				E17AA39728DBB7C5009D4775 /* ContentView.swift */,
 				E1CBF2AF28DBBFDF00D6724D /* OverlayView.swift */,
 				E17AA39928DBB7C6009D4775 /* Assets.xcassets */,
 				E1CBF2A828DBBBDD00D6724D /* Info.plist */,
@@ -165,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				E19CEFF928D5101B00ADF78E /* tvOSExample.swift */,
-				E19CEFFB28D5101B00ADF78E /* ContentView.swift */,
 				E19CF00B28D5106600ADF78E /* OverlayView.swift */,
 				E19CEFFD28D5101C00ADF78E /* Assets.xcassets */,
 			);
@@ -199,7 +195,6 @@
 			isa = PBXGroup;
 			children = (
 				E1A52CCC28D50E95009BB067 /* iOSExample.swift */,
-				E1A52CCE28D50E95009BB067 /* ContentView.swift */,
 				E19CEFED28D50F2A00ADF78E /* OverlayView.swift */,
 				E1A52CD028D50E96009BB067 /* Assets.xcassets */,
 				E19CEFE928D50F1100ADF78E /* Info.plist */,
@@ -210,6 +205,7 @@
 		E1CBF2F428DC13E300D6724D /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E1A52CCE28D50E95009BB067 /* ContentView.swift */,
 				E1CBF2F528DC13E300D6724D /* ContentViewModel.swift */,
 				E1CBF2F628DC13E300D6724D /* IntExtensions.swift */,
 			);
@@ -356,7 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1CBF2FC28DC13E300D6724D /* IntExtensions.swift in Sources */,
-				E17AA39828DBB7C5009D4775 /* ContentView.swift in Sources */,
+				E15FF6EB28DC24A30074328C /* ContentView.swift in Sources */,
 				E1CBF2F928DC13E300D6724D /* ContentViewModel.swift in Sources */,
 				E1CBF2B028DBBFDF00D6724D /* OverlayView.swift in Sources */,
 				E17AA39628DBB7C5009D4775 /* macOSExample.swift in Sources */,
@@ -368,9 +364,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1CBF2FB28DC13E300D6724D /* IntExtensions.swift in Sources */,
+				E15FF6EA28DC24A30074328C /* ContentView.swift in Sources */,
 				E1CBF2F828DC13E300D6724D /* ContentViewModel.swift in Sources */,
 				E19CF00C28D5106600ADF78E /* OverlayView.swift in Sources */,
-				E19CEFFC28D5101B00ADF78E /* ContentView.swift in Sources */,
 				E19CEFFA28D5101B00ADF78E /* tvOSExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
