@@ -3,7 +3,7 @@ import Foundation
 public extension VLCVideoPlayer {
 
     struct PlaybackInformation {
-        public let currentConfiguration: VLCVideoPlayer.Configuration
+        public let startConfiguration: VLCVideoPlayer.Configuration
         public let position: Float
         public let length: Int32
         public let isSeekable: Bool

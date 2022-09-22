@@ -22,7 +22,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private lazy var videoContentView = makeVideoContentView()
 
-    private var currentConfiguration: VLCVideoPlayer.Configuration
+    private var startConfiguration: VLCVideoPlayer.Configuration
     private let delegate: VLCVideoPlayerDelegate
     private let logger: VLCVideoPlayerLogger
     private var currentMediaPlayer: VLCMediaPlayer?
@@ -44,10 +44,9 @@ public class UIVLCVideoPlayerView: _PlatformView {
         delegate: VLCVideoPlayerDelegate,
         logger: VLCVideoPlayerLogger
     ) {
-        self.currentConfiguration = configuration
+        self.startConfiguration = configuration
         self.delegate = delegate
         self.logger = logger
-        self.currentMediaPlayer = nil
         super.init(frame: .zero)
 
         #if os(macOS)
@@ -97,7 +96,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
             newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
         }
 
-        self.currentConfiguration = configuration
+        self.startConfiguration = configuration
         self.currentMediaPlayer = newMediaPlayer
         self.hasSetDefaultConfiguration = false
         self.lastPlayerTicks = 0
@@ -215,7 +214,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         }
 
         return VLCVideoPlayer.PlaybackInformation(
-            currentConfiguration: currentConfiguration,
+            startConfiguration: startConfiguration,
             position: player.position,
             length: media.length.intValue,
             isSeekable: player.isSeekable,
@@ -238,6 +237,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             with: playbackInformation
         )
 
+        // Set playing state
         if lastPlayerState != .playing,
            abs(currentTicks - lastPlayerTicks) >= 200
         {
@@ -246,18 +246,19 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             lastPlayerTicks = currentTicks
 
             if !hasSetDefaultConfiguration {
-                setDefaultConfiguration(with: player, from: currentConfiguration)
+                setStartConfiguration(with: player, from: startConfiguration)
                 hasSetDefaultConfiguration = true
             }
         }
 
-        if currentConfiguration.restartOnEnded,
+        // Replay
+        if startConfiguration.replay,
            lastPlayerState == .playing,
            abs(player.media!.length.intValue - currentTicks) <= 500
         {
-            currentConfiguration.autoPlay = true
-            currentConfiguration.startTime = .ticks(0)
-            setupVLCMediaPlayer(with: currentConfiguration)
+            startConfiguration.autoPlay = true
+            startConfiguration.startTime = .ticks(0)
+            setupVLCMediaPlayer(with: startConfiguration)
         }
     }
 
@@ -272,7 +273,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         lastPlayerState = player.state
     }
 
-    private func setDefaultConfiguration(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
+    private func setStartConfiguration(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
 
         player.time = VLCTime(int: configuration.startTime.asTicks)
 
@@ -302,7 +303,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
 
     public func handleMessage(_ message: String, debugLevel level: Int32) {
-        guard level >= currentConfiguration.loggingLevel.rawValue else { return }
+        guard level >= startConfiguration.loggingLevel.rawValue else { return }
         let level = VLCVideoPlayer.LoggingLevel(rawValue: level) ?? .info
         self.logger.vlcVideoPlayer(didLog: message, at: level)
     }
