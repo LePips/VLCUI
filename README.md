@@ -16,9 +16,8 @@ struct ContentView: View {
 
 ## Example
 
-An example project for iOS and tvOS is provided to show basic functionality of VLCUI. In order to start the example project, you must download and link the frameworks.
+An example project is provided to show basic functionality of VLCUI. Download the frameworks with the provided **Cartfile**:
 
-An example **Cartfile** is provided. Run the following command to download the frameworks:
-```
+```shell
 carthage update --use-xcframeworks
 ```
