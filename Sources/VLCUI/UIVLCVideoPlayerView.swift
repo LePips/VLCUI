@@ -47,11 +47,13 @@ public class UIVLCVideoPlayerView: _PlatformView {
         self.currentMediaPlayer = nil
         super.init(frame: .zero)
 
+        #if os(macOS)
+        layer?.backgroundColor = .clear
+        #else
+        backgroundColor = .clear
+        #endif
+
         setupVideoContentView()
-
-//        backgroundColor = .clear
-//        view.accessibilityIgnoresInvertColors = true
-
         setupVLCMediaPlayer(with: configuration)
         setupEventSubjectListener()
     }
@@ -102,7 +104,12 @@ public class UIVLCVideoPlayerView: _PlatformView {
     private func makeVideoContentView() -> _PlatformView {
         let view = _PlatformView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = .black
+
+        #if os(macOS)
+        view.layer?.backgroundColor = .black
+        #else
+        view.backgroundColor = .black
+        #endif
         return view
     }
 }
@@ -150,7 +157,7 @@ public extension UIVLCVideoPlayerView {
             case let .aspectFill(fill):
                 guard fill >= 0 && fill <= 1 else { return }
                 let scale = 1 + CGFloat(fill) * (self.aspectFillScale - 1)
-                self.videoContentView.apply(transform: CGAffineTransform(scaleX: scale, y: scale))
+                self.videoContentView.scale(x: scale, y: scale)
             case let .setTime(time):
                 guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
                 currentMediaPlayer.time = VLCTime(int: time.asTicks)
@@ -255,7 +262,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         player.fastForward(atRate: defaultPlayerSpeed)
 
         if configuration.aspectFill {
-            videoContentView.apply(transform: CGAffineTransform(scaleX: aspectFillScale, y: aspectFillScale))
+            videoContentView.scale(x: aspectFillScale, y: aspectFillScale)
         } else {
             videoContentView.apply(transform: .identity)
         }

@@ -22,6 +22,14 @@ class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
         return configuration
     }
 
+    var positiveTimeLabel: String {
+        (ticks.roundDownNearestThousand / 1000).timeLabel
+    }
+
+    var negativeTimeLabel: String {
+        ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
+    }
+
     func setCustomPosition(_ position: Float) {
         self.position = position
     }

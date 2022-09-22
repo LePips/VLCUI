@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct tvOSVLCUIExampleApp: App {
+struct tvOSExample: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -51,7 +51,7 @@ struct OverlayView: View {
             .buttonStyle(.plain)
 
             HStack(spacing: 5) {
-                Text((viewModel.ticks.roundDownNearestThousand / 1000).timeLabel)
+                Text(viewModel.positiveTimeLabel)
                     .frame(width: 50)
 
                 Slider(
@@ -61,7 +61,7 @@ struct OverlayView: View {
                     isScrubbing = isEditing
                 }
 
-                Text(((viewModel.totalTicks.roundDownNearestThousand - viewModel.ticks.roundDownNearestThousand) / 1000).timeLabel)
+                Text(viewModel.negativeTimeLabel)
                     .frame(width: 50)
             }
         }

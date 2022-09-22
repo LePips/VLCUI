@@ -9,9 +9,15 @@ import UIKit
 extension _PlatformView {
 
     func apply(transform: CGAffineTransform) {
-        #if os(macOS)
-        layer?.setAffineTransform(transform)
-        #else
+        #if !os(macOS)
+        self.transform = transform
+        #endif
+    }
+
+    func scale(x: CGFloat, y: CGFloat) {
+        let transform = CGAffineTransform(scaleX: x, y: y)
+
+        #if !os(macOS)
         self.transform = transform
         #endif
     }

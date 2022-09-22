@@ -54,6 +54,8 @@ public extension VLCVideoPlayer {
 
         /// Aspect fill depending on the video's content size and the view's bounds, based
         /// on the given percentage of completion
+        ///
+        /// **Note**: Does not work on macOS
         case aspectFill(Float)
 
         /// Set the player time
@@ -63,12 +65,18 @@ public extension VLCVideoPlayer {
         ///
         /// **Note**: Due to VLCKit, a given size does not accurately represent a font size and magnitudes are inverted.
         /// Larger values indicate a smaller font and smaller values indicate a larger font.
+        ///
+        /// **Note**: Does not work on macOS
         case setSubtitleSize(ValueSelector<Int>)
 
         /// Set the subtitle font using the font name of the given `UIFont`
+        ///
+        /// **Note**: Does not work on macOS
         case setSubtitleFont(ValueSelector<_PlatformFont>)
 
         /// Set the subtitle font color using the RGB values of the given `UIColor`
+        ///
+        /// **Note**: Does not work on macOS
         case setSubtitleColor(ValueSelector<_PlatformColor>)
 
         /// Add a playback child

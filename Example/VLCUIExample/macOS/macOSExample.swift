@@ -1,10 +1,11 @@
 import SwiftUI
 
 @main
-struct VLCUIExampleApp: App {
+struct macOSExample: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
     }
 }
