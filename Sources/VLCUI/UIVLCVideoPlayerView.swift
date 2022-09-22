@@ -238,7 +238,9 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             with: playbackInformation
         )
 
-        if lastPlayerState != .playing && abs(currentTicks - lastPlayerTicks) >= 200 {
+        if lastPlayerState != .playing,
+           abs(currentTicks - lastPlayerTicks) >= 200
+        {
             delegate.vlcVideoPlayer(didUpdateState: .playing, with: playbackInformation)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
@@ -247,6 +249,15 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
                 setDefaultConfiguration(with: player, from: currentConfiguration)
                 hasSetDefaultConfiguration = true
             }
+        }
+
+        if currentConfiguration.restartOnEnded,
+           lastPlayerState == .playing,
+           abs(player.media!.length.intValue - currentTicks) <= 500
+        {
+            currentConfiguration.autoPlay = true
+            currentConfiguration.startTime = .ticks(0)
+            setupVLCMediaPlayer(with: currentConfiguration)
         }
     }
 
