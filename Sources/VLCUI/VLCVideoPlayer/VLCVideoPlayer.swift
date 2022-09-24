@@ -1,12 +1,13 @@
+import Combine
 import Foundation
 import SwiftUI
 
 public struct VLCVideoPlayer: _PlatformRepresentable {
 
-    // MARK: Implementation
-
     private var configuration: VLCVideoPlayer.Configuration
-    private var delegate: VLCVideoPlayerDelegate
+    private var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>
+    private var onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
+    private var onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
     private var logger: VLCVideoPlayerLogger
 
     #if os(macOS)
@@ -26,7 +27,9 @@ public struct VLCVideoPlayer: _PlatformRepresentable {
     private func makeVideoPlayerView() -> UIVLCVideoPlayerView {
         UIVLCVideoPlayerView(
             configuration: configuration,
-            delegate: delegate,
+            eventSubject: eventSubject,
+            onTicksUpdated: onTicksUpdated,
+            onStateUpdated: onStateUpdated,
             logger: logger
         )
     }
@@ -36,7 +39,9 @@ public extension VLCVideoPlayer {
 
     init(configuration: VLCVideoPlayer.Configuration) {
         self.configuration = configuration
-        self.delegate = DefaultVideoPlayerDelegate()
+        self.eventSubject = .init(nil)
+        self.onTicksUpdated = { _, _ in }
+        self.onStateUpdated = { _, _ in }
         self.logger = DefaultVideoPlayerLogger()
     }
 
@@ -48,9 +53,24 @@ public extension VLCVideoPlayer {
         self.init(configuration: configure())
     }
 
-    func delegate(_ delegate: VLCVideoPlayerDelegate) -> Self {
+    /// Sets the event subject for subscribing to player command events
+    func eventSubject(_ eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>) -> Self {
         var copy = self
-        copy.delegate = delegate
+        copy.eventSubject = eventSubject
+        return copy
+    }
+
+    /// Sets the action that fires when the media ticks have been updated
+    func onTicksUpdated(_ action: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
+        var copy = self
+        copy.onTicksUpdated = action
+        return copy
+    }
+
+    /// Sets the action that fires when the media state has been updated
+    func onStateUpdated(_ action: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
+        var copy = self
+        copy.onStateUpdated = action
         return copy
     }
 

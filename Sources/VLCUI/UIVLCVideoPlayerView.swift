@@ -23,7 +23,9 @@ public class UIVLCVideoPlayerView: _PlatformView {
     private lazy var videoContentView = makeVideoContentView()
 
     private var startConfiguration: VLCVideoPlayer.Configuration
-    private let delegate: VLCVideoPlayerDelegate
+    private let eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>
+    private let onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
+    private let onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
     private let logger: VLCVideoPlayerLogger
     private var currentMediaPlayer: VLCMediaPlayer?
 
@@ -41,11 +43,15 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     init(
         configuration: VLCVideoPlayer.Configuration,
-        delegate: VLCVideoPlayerDelegate,
+        eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>,
+        onTicksUpdated: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void,
+        onStateUpdated: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void,
         logger: VLCVideoPlayerLogger
     ) {
         self.startConfiguration = configuration
-        self.delegate = delegate
+        self.eventSubject = eventSubject
+        self.onTicksUpdated = onTicksUpdated
+        self.onStateUpdated = onStateUpdated
         self.logger = logger
         super.init(frame: .zero)
 
@@ -125,7 +131,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 public extension UIVLCVideoPlayerView {
 
     func setupEventSubjectListener() {
-        delegate.eventSubject.sink { event in
+        eventSubject.sink { event in
             guard let event = event,
                   let currentMediaPlayer = self.currentMediaPlayer,
                   let media = currentMediaPlayer.media else { return }
@@ -232,16 +238,13 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let currentTicks = player.time.intValue
         let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        delegate.vlcVideoPlayer(
-            didUpdateTicks: currentTicks,
-            with: playbackInformation
-        )
+        onTicksUpdated(currentTicks, playbackInformation)
 
         // Set playing state
         if lastPlayerState != .playing,
            abs(currentTicks - lastPlayerTicks) >= 200
         {
-            delegate.vlcVideoPlayer(didUpdateState: .playing, with: playbackInformation)
+            onStateUpdated(.playing, playbackInformation)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
 
@@ -269,7 +272,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let wrappedState = VLCVideoPlayer.State(rawValue: player.state.rawValue) ?? .error
         let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        delegate.vlcVideoPlayer(didUpdateState: wrappedState, with: playbackInformation)
+        onStateUpdated(wrappedState, playbackInformation)
         lastPlayerState = player.state
     }
 

@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import VLCUI
 
-class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
+class ContentViewModel: ObservableObject {
 
     @Published
     var ticks: Int32 = 0
@@ -32,20 +32,5 @@ class ContentViewModel: ObservableObject, VLCVideoPlayerDelegate {
 
     func setCustomPosition(_ position: Float) {
         self.position = position
-    }
-
-    func vlcVideoPlayer(didUpdateTicks ticks: Int32, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {
-        self.ticks = ticks
-        self.position = playbackInformation.position
-
-        self.totalTicks = playbackInformation.length
-    }
-
-    func vlcVideoPlayer(didUpdateState state: VLCVideoPlayer.State, with playbackInformation: VLCVideoPlayer.PlaybackInformation) {
-        self.playerState = state
-
-        if state == .error {
-            print("An error has occurred")
-        }
     }
 }

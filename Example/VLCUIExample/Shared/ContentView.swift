@@ -9,7 +9,15 @@ struct ContentView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VLCVideoPlayer(configuration: viewModel.configuration)
-                .delegate(viewModel)
+                .eventSubject(viewModel.eventSubject)
+                .onTicksUpdated { ticks, playbackInformation in
+                    viewModel.ticks = ticks
+                    viewModel.totalTicks = playbackInformation.length
+                    viewModel.position = playbackInformation.position
+                }
+                .onStateUpdated { state, _ in
+                    viewModel.playerState = state
+                }
 
             OverlayView(viewModel: viewModel)
                 .padding()
