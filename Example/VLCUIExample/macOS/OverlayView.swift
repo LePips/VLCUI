@@ -14,7 +14,7 @@ struct OverlayView: View {
         HStack(spacing: 20) {
 
             Button {
-                viewModel.eventSubject.send(.jumpBackward(15))
+                viewModel.proxy.jumpBackward(15)
             } label: {
                 Image(systemName: "gobackward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
@@ -23,9 +23,9 @@ struct OverlayView: View {
 
             Button {
                 if viewModel.playerState == .playing {
-                    viewModel.eventSubject.send(.pause)
+                    viewModel.proxy.pause()
                 } else {
-                    viewModel.eventSubject.send(.play)
+                    viewModel.proxy.play()
                 }
             } label: {
                 Group {
@@ -43,7 +43,7 @@ struct OverlayView: View {
             .buttonStyle(.plain)
 
             Button {
-                viewModel.eventSubject.send(.jumpForward(15))
+                viewModel.proxy.jumpForward(15)
             } label: {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
@@ -67,11 +67,11 @@ struct OverlayView: View {
         }
         .onChange(of: isScrubbing) { isScrubbing in
             guard !isScrubbing else { return }
-            self.viewModel.eventSubject.send(.setTime(.ticks(viewModel.totalTicks * Int32(currentPosition * 100) / 100)))
+            viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
         }
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }
-            self.currentPosition = newValue
+            currentPosition = newValue
         }
     }
 }

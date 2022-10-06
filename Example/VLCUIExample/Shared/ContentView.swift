@@ -9,7 +9,7 @@ struct ContentView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VLCVideoPlayer(configuration: viewModel.configuration)
-                .eventSubject(viewModel.eventSubject)
+                .proxy(viewModel.proxy)
                 .onTicksUpdated { ticks, playbackInformation in
                     viewModel.ticks = ticks
                     viewModel.totalTicks = playbackInformation.length

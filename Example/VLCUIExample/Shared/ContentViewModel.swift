@@ -13,7 +13,7 @@ class ContentViewModel: ObservableObject {
     @Published
     var totalTicks: Int32 = 0
 
-    var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never> = .init(nil)
+    let proxy: VLCVideoPlayer.Proxy = .init()
 
     var configuration: VLCVideoPlayer.Configuration {
         let configuration = VLCVideoPlayer
@@ -30,7 +30,7 @@ class ContentViewModel: ObservableObject {
         ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
     }
 
-    func setCustomPosition(_ position: Float) {
-        self.position = position
+    func setCustomPosition(_ newPosition: Float) {
+        position = newPosition
     }
 }

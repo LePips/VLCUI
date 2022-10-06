@@ -73,57 +73,31 @@ extension VLCMediaPlayer {
     func subtitleTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int32>) -> Int32 {
         guard let indexes = videoSubTitlesIndexes as? [Int32] else { return -1 }
 
-        let trackIndex: Int32
-
         switch track {
         case .auto:
-            if let firstValidTrackIndex = indexes.first(where: { $0 != -1 }) {
-                trackIndex = firstValidTrackIndex
-            } else {
-                trackIndex = -1
-            }
+            return indexes.first(where: { $0 != -1 }) ?? -1
         case let .absolute(index):
-            if indexes.contains(index) {
-                trackIndex = index
-            } else {
-                trackIndex = -1
-            }
+            return indexes.contains(index) ? index : -1
         }
-
-        return trackIndex
     }
 
     func audioTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int32>) -> Int32 {
         guard let indexes = audioTrackIndexes as? [Int32] else { return -1 }
 
-        let trackIndex: Int32
-
         switch track {
         case .auto:
-            if let firstValidTrackIndex = indexes.first(where: { $0 != -1 }) {
-                trackIndex = firstValidTrackIndex
-            } else {
-                trackIndex = -1
-            }
+            return indexes.first(where: { $0 != -1 }) ?? -1
         case let .absolute(index):
-            if indexes.contains(index) {
-                trackIndex = index
-            } else {
-                trackIndex = -1
-            }
+            return indexes.contains(index) ? index : -1
         }
-
-        return trackIndex
     }
 
-    func fastForwardSpeed(from speed: VLCVideoPlayer.ValueSelector<Float>) -> Float {
-        let newSpeed: Float
-        switch speed {
+    func rate(from rate: VLCVideoPlayer.ValueSelector<Float>) -> Float {
+        switch rate {
         case .auto:
-            newSpeed = 1
+            return 1
         case let .absolute(speed):
-            newSpeed = speed
+            return speed
         }
-        return newSpeed
     }
 }

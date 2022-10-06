@@ -14,7 +14,7 @@ struct OverlayView: View {
         HStack(spacing: 20) {
 
             Button {
-                viewModel.eventSubject.send(.jumpBackward(15))
+                viewModel.proxy.jumpBackward(15)
             } label: {
                 Image(systemName: "gobackward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
@@ -22,9 +22,9 @@ struct OverlayView: View {
 
             Button {
                 if viewModel.playerState == .playing {
-                    viewModel.eventSubject.send(.pause)
+                    viewModel.proxy.pause()
                 } else {
-                    viewModel.eventSubject.send(.play)
+                    viewModel.proxy.play()
                 }
             } label: {
                 Group {
@@ -41,14 +41,14 @@ struct OverlayView: View {
             }
 
             Button {
-                viewModel.eventSubject.send(.jumpForward(15))
+                viewModel.proxy.jumpForward(15)
             } label: {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
             }
 
             HStack(spacing: 5) {
-                Text((viewModel.ticks.roundDownNearestThousand / 1000).timeLabel)
+                Text(viewModel.positiveTimeLabel)
                     .frame(width: 50)
 
                 Slider(
@@ -58,17 +58,17 @@ struct OverlayView: View {
                     isScrubbing = isEditing
                 }
 
-                Text(((viewModel.totalTicks.roundDownNearestThousand - viewModel.ticks.roundDownNearestThousand) / 1000).timeLabel)
+                Text(viewModel.negativeTimeLabel)
                     .frame(width: 50)
             }
         }
         .onChange(of: isScrubbing) { isScrubbing in
             guard !isScrubbing else { return }
-            self.viewModel.eventSubject.send(.setTime(.ticks(viewModel.totalTicks * Int32(currentPosition * 100) / 100)))
+            viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int32(currentPosition * 100) / 100))
         }
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }
-            self.currentPosition = newValue
+            currentPosition = newValue
         }
     }
 }

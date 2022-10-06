@@ -1,6 +1,7 @@
 import Foundation
 
 extension Int32 {
+
     var timeLabel: String {
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .abbreviated

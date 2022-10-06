@@ -1,3 +1,5 @@
+# VLCUI
+
 A [VLCKit](https://code.videolan.org/videolan/VLCKit) wrapper for SwiftUI.
 
 ## Requirements

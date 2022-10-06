@@ -22,14 +22,14 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private lazy var videoContentView = makeVideoContentView()
 
-    private var startConfiguration: VLCVideoPlayer.Configuration
-    private let eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>
+    private var configuration: VLCVideoPlayer.Configuration
+    private var proxy: VLCVideoPlayer.Proxy?
     private let onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
     private let onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
-    private let logger: VLCVideoPlayerLogger
+    private let loggingInfo: (logger: VLCVideoPlayerLogger, level: VLCVideoPlayer.LoggingLevel)?
     private var currentMediaPlayer: VLCMediaPlayer?
 
-    private var hasSetDefaultConfiguration: Bool = false
+    private var hasSetCurrentConfigurationValues: Bool = false
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
     private var cancellables = Set<AnyCancellable>()
@@ -43,17 +43,19 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     init(
         configuration: VLCVideoPlayer.Configuration,
-        eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>,
+        proxy: VLCVideoPlayer.Proxy?,
         onTicksUpdated: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void,
         onStateUpdated: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void,
-        logger: VLCVideoPlayerLogger
+        loggingInfo: (VLCVideoPlayerLogger, VLCVideoPlayer.LoggingLevel)?
     ) {
-        self.startConfiguration = configuration
-        self.eventSubject = eventSubject
+        self.configuration = configuration
+        self.proxy = proxy
         self.onTicksUpdated = onTicksUpdated
         self.onStateUpdated = onStateUpdated
-        self.logger = logger
+        self.loggingInfo = loggingInfo
         super.init(frame: .zero)
+
+        proxy?.videoPlayerView = self
 
         #if os(macOS)
         layer?.backgroundColor = .clear
@@ -63,7 +65,6 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
         setupVideoContentView()
         setupVLCMediaPlayer(with: configuration)
-        setupEventSubjectListener()
     }
 
     @available(*, unavailable)
@@ -82,35 +83,44 @@ public class UIVLCVideoPlayerView: _PlatformView {
         ])
     }
 
-    private func setupVLCMediaPlayer(with configuration: VLCVideoPlayer.Configuration) {
-        self.currentMediaPlayer?.stop()
-        self.currentMediaPlayer = nil
+    func setupVLCMediaPlayer(with newConfiguration: VLCVideoPlayer.Configuration) {
+        currentMediaPlayer?.stop()
+        currentMediaPlayer = nil
 
-        let media = VLCMedia(url: configuration.url)
-        media.addOptions(configuration.options)
+        let media = VLCMedia(url: newConfiguration.url)
+        media.addOptions(newConfiguration.options)
 
         let newMediaPlayer = VLCMediaPlayer()
         newMediaPlayer.media = media
         newMediaPlayer.drawable = videoContentView
         newMediaPlayer.delegate = self
 
-        newMediaPlayer.libraryInstance.debugLogging = configuration.isLogging
-        newMediaPlayer.libraryInstance.debugLoggingLevel = 3
-        newMediaPlayer.libraryInstance.debugLoggingTarget = self
+        if let loggingInfo = loggingInfo {
+            newMediaPlayer.libraryInstance.debugLogging = true
+            newMediaPlayer.libraryInstance.debugLoggingLevel = loggingInfo.level.rawValue
+            newMediaPlayer.libraryInstance.debugLoggingTarget = self
+        }
 
-        for child in configuration.playbackChildren {
+        for child in newConfiguration.playbackChildren {
             newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
         }
 
-        self.startConfiguration = configuration
-        self.currentMediaPlayer = newMediaPlayer
-        self.hasSetDefaultConfiguration = false
-        self.lastPlayerTicks = 0
-        self.lastPlayerState = .opening
+        configuration = newConfiguration
+        currentMediaPlayer = newMediaPlayer
+        proxy?.mediaPlayer = newMediaPlayer
+        hasSetCurrentConfigurationValues = false
+        lastPlayerTicks = 0
+        lastPlayerState = .opening
 
-        if configuration.autoPlay {
+        if newConfiguration.autoPlay {
             newMediaPlayer.play()
         }
+    }
+
+    func setAspectFill(with percentage: Float) {
+        guard percentage >= 0 && percentage <= 1 else { return }
+        let scale = 1 + CGFloat(percentage) * (self.aspectFillScale - 1)
+        self.videoContentView.scale(x: scale, y: scale)
     }
 
     private func makeVideoContentView() -> _PlatformView {
@@ -123,69 +133,6 @@ public class UIVLCVideoPlayerView: _PlatformView {
         view.backgroundColor = .black
         #endif
         return view
-    }
-}
-
-// MARK: Event Listener
-
-public extension UIVLCVideoPlayerView {
-
-    func setupEventSubjectListener() {
-        eventSubject.sink { event in
-            guard let event = event,
-                  let currentMediaPlayer = self.currentMediaPlayer,
-                  let media = currentMediaPlayer.media else { return }
-            switch event {
-            case .play:
-                currentMediaPlayer.play()
-            case .pause:
-                currentMediaPlayer.pause()
-            case .stop:
-                currentMediaPlayer.stop()
-            case .cancel:
-                currentMediaPlayer.stop()
-                self.cancellables.forEach { $0.cancel() }
-            case let .jumpForward(interval):
-                currentMediaPlayer.jumpForward(interval)
-            case let .jumpBackward(interval):
-                currentMediaPlayer.jumpBackward(interval)
-            case .gotoNextFrame:
-                currentMediaPlayer.gotoNextFrame()
-            case let .setSubtitleTrack(track):
-                let newTrackIndex = currentMediaPlayer.subtitleTrackIndex(from: track)
-                currentMediaPlayer.currentVideoSubTitleIndex = newTrackIndex
-            case let .setAudioTrack(track):
-                let newTrackIndex = currentMediaPlayer.audioTrackIndex(from: track)
-                currentMediaPlayer.currentAudioTrackIndex = newTrackIndex
-            case let .setSubtitleDelay(delay):
-                let delay = Int(delay.asTicks) * 1000
-                currentMediaPlayer.currentVideoSubTitleDelay = delay
-            case let .setAudioDelay(delay):
-                let delay = Int(delay.asTicks) * 1000
-                currentMediaPlayer.currentAudioPlaybackDelay = delay
-            case let .fastForward(speed):
-                let newSpeed = currentMediaPlayer.fastForwardSpeed(from: speed)
-                currentMediaPlayer.fastForward(atRate: newSpeed)
-            case let .aspectFill(fill):
-                guard fill >= 0 && fill <= 1 else { return }
-                let scale = 1 + CGFloat(fill) * (self.aspectFillScale - 1)
-                self.videoContentView.scale(x: scale, y: scale)
-            case let .setTime(time):
-                guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
-                currentMediaPlayer.time = VLCTime(int: time.asTicks)
-            case let .setSubtitleSize(size):
-                currentMediaPlayer.setSubtitleSize(size)
-            case let .setSubtitleFont(font):
-                currentMediaPlayer.setSubtitleFont(font)
-            case let .setSubtitleColor(color):
-                currentMediaPlayer.setSubtitleColor(color)
-            case let .addPlaybackChild(child):
-                currentMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
-            case let .playNewMedia(newConfiguration):
-                self.setupVLCMediaPlayer(with: newConfiguration)
-            }
-        }
-        .store(in: &cancellables)
     }
 }
 
@@ -220,7 +167,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         }
 
         return VLCVideoPlayer.PlaybackInformation(
-            startConfiguration: startConfiguration,
+            startConfiguration: configuration,
             position: player.position,
             length: media.length.intValue,
             isSeekable: player.isSeekable,
@@ -248,20 +195,20 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
 
-            if !hasSetDefaultConfiguration {
-                setStartConfiguration(with: player, from: startConfiguration)
-                hasSetDefaultConfiguration = true
+            if !hasSetCurrentConfigurationValues {
+                setConfigurationValues(with: player, from: configuration)
+                hasSetCurrentConfigurationValues = true
             }
         }
 
         // Replay
-        if startConfiguration.replay,
+        if configuration.replay,
            lastPlayerState == .playing,
            abs(player.media!.length.intValue - currentTicks) <= 500
         {
-            startConfiguration.autoPlay = true
-            startConfiguration.startTime = .ticks(0)
-            setupVLCMediaPlayer(with: startConfiguration)
+            configuration.autoPlay = true
+            configuration.startTime = .ticks(0)
+            setupVLCMediaPlayer(with: configuration)
         }
     }
 
@@ -276,11 +223,11 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         lastPlayerState = player.state
     }
 
-    private func setStartConfiguration(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
+    private func setConfigurationValues(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
 
         player.time = VLCTime(int: configuration.startTime.asTicks)
 
-        let defaultPlayerSpeed = player.fastForwardSpeed(from: configuration.playbackSpeed)
+        let defaultPlayerSpeed = player.rate(from: configuration.rate)
         player.fastForward(atRate: defaultPlayerSpeed)
 
         if configuration.aspectFill {
@@ -306,8 +253,9 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
 
     public func handleMessage(_ message: String, debugLevel level: Int32) {
-        guard level >= startConfiguration.loggingLevel.rawValue else { return }
+        guard let loggingInfo = loggingInfo,
+              level >= loggingInfo.level.rawValue else { return }
         let level = VLCVideoPlayer.LoggingLevel(rawValue: level) ?? .info
-        self.logger.vlcVideoPlayer(didLog: message, at: level)
+        loggingInfo.logger.vlcVideoPlayer(didLog: message, at: level)
     }
 }

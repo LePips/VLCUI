@@ -11,11 +11,11 @@ public extension VLCVideoPlayer {
     // Configuration for VLCMediaPlayer
     class Configuration {
         public var url: URL
-        public var autoPlay: Bool = false
+        public var autoPlay: Bool = true
         public var startTime: TimeSelector = .ticks(0)
         public var aspectFill: Bool = false
         public var replay: Bool = false
-        public var playbackSpeed: ValueSelector<Float> = .auto
+        public var rate: ValueSelector<Float> = .auto
         public var subtitleIndex: ValueSelector<Int32> = .auto
         public var audioIndex: ValueSelector<Int32> = .auto
         public var subtitleSize: ValueSelector<Int> = .auto
@@ -23,8 +23,6 @@ public extension VLCVideoPlayer {
         public var subtitleColor: ValueSelector<_PlatformColor> = .auto
         public var playbackChildren: [PlaybackChild] = []
         public var options: [String: Any] = [:]
-        public var isLogging: Bool = false
-        public var loggingLevel: LoggingLevel = .info
 
         public init(url: URL) {
             self.url = url

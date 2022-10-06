@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 #if os(macOS)
 import AppKit
@@ -20,5 +21,14 @@ extension _PlatformView {
         #if !os(macOS)
         self.transform = transform
         #endif
+    }
+}
+
+extension View {
+
+    func copy<Value>(modifying keyPath: WritableKeyPath<Self, Value>, with newValue: Value) -> Self {
+        var copy = self
+        copy[keyPath: keyPath] = newValue
+        return copy
     }
 }

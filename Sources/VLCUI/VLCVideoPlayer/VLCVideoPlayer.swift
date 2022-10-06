@@ -5,10 +5,10 @@ import SwiftUI
 public struct VLCVideoPlayer: _PlatformRepresentable {
 
     private var configuration: VLCVideoPlayer.Configuration
-    private var eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>
+    private var proxy: VLCVideoPlayer.Proxy?
     private var onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
     private var onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
-    private var logger: VLCVideoPlayerLogger
+    private var loggingInfo: (VLCVideoPlayerLogger, LoggingLevel)?
 
     #if os(macOS)
     public func makeNSView(context: Context) -> UIVLCVideoPlayerView {
@@ -27,10 +27,10 @@ public struct VLCVideoPlayer: _PlatformRepresentable {
     private func makeVideoPlayerView() -> UIVLCVideoPlayerView {
         UIVLCVideoPlayerView(
             configuration: configuration,
-            eventSubject: eventSubject,
+            proxy: proxy,
             onTicksUpdated: onTicksUpdated,
             onStateUpdated: onStateUpdated,
-            logger: logger
+            loggingInfo: loggingInfo
         )
     }
 }
@@ -38,11 +38,13 @@ public struct VLCVideoPlayer: _PlatformRepresentable {
 public extension VLCVideoPlayer {
 
     init(configuration: VLCVideoPlayer.Configuration) {
-        self.configuration = configuration
-        self.eventSubject = .init(nil)
-        self.onTicksUpdated = { _, _ in }
-        self.onStateUpdated = { _, _ in }
-        self.logger = DefaultVideoPlayerLogger()
+        self.init(
+            configuration: configuration,
+            proxy: nil,
+            onTicksUpdated: { _, _ in },
+            onStateUpdated: { _, _ in },
+            loggingInfo: nil
+        )
     }
 
     init(url: URL) {
@@ -53,30 +55,22 @@ public extension VLCVideoPlayer {
         self.init(configuration: configure())
     }
 
-    /// Sets the event subject for subscribing to player command events
-    func eventSubject(_ eventSubject: CurrentValueSubject<VLCVideoPlayer.Event?, Never>) -> Self {
-        var copy = self
-        copy.eventSubject = eventSubject
-        return copy
+    /// Sets the proxy for events
+    func proxy(_ proxy: VLCVideoPlayer.Proxy) -> Self {
+        copy(modifying: \.proxy, with: proxy)
     }
 
     /// Sets the action that fires when the media ticks have been updated
     func onTicksUpdated(_ action: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
-        var copy = self
-        copy.onTicksUpdated = action
-        return copy
+        copy(modifying: \.onTicksUpdated, with: action)
     }
 
     /// Sets the action that fires when the media state has been updated
     func onStateUpdated(_ action: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
-        var copy = self
-        copy.onStateUpdated = action
-        return copy
+        copy(modifying: \.onStateUpdated, with: action)
     }
 
-    func logger(_ logger: VLCVideoPlayerLogger) -> Self {
-        var copy = self
-        copy.logger = logger
-        return copy
+    func logger(_ logger: VLCVideoPlayerLogger, level: LoggingLevel) -> Self {
+        copy(modifying: \.loggingInfo, with: (logger, level))
     }
 }

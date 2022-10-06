@@ -19,7 +19,7 @@ struct OverlayView: View {
 
             HStack {
                 Button {
-                    viewModel.eventSubject.send(.jumpBackward(15))
+                    viewModel.proxy.jumpBackward(15)
                 } label: {
                     Image(systemName: "gobackward.15")
                         .font(.system(size: 28, weight: .regular, design: .default))
@@ -28,9 +28,9 @@ struct OverlayView: View {
 
                 Button {
                     if viewModel.playerState == .playing {
-                        viewModel.eventSubject.send(.pause)
+                        viewModel.proxy.pause()
                     } else {
-                        viewModel.eventSubject.send(.play)
+                        viewModel.proxy.play()
                     }
                 } label: {
                     Group {
@@ -45,7 +45,7 @@ struct OverlayView: View {
                 .buttonStyle(.plain)
 
                 Button {
-                    viewModel.eventSubject.send(.jumpForward(15))
+                    viewModel.proxy.jumpForward(15)
                 } label: {
                     Image(systemName: "goforward.15")
                         .font(.system(size: 28, weight: .regular, design: .default))
