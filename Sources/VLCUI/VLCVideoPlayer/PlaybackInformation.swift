@@ -14,6 +14,20 @@ public extension VLCVideoPlayer {
         public let subtitleTracks: [Int32: String]
         public let audioTracks: [Int32: String]
 
-        public let stats: [AnyHashable: Any]
+        public let numberOfReadBytesOnInput: Int
+        public let inputBitrate: Float
+        public let numberOfReadBytesOnDemux: Int
+        public let demuxBitrate: Float
+        public let numberOfDecodedVideoBlocks: Int
+        public let numberOfDecodedAudioBlocks: Int
+        public let numberOfDisplayedPictures: Int
+        public let numberOfLostPictures: Int
+        public let numberOfPlayedAudioBuffers: Int
+        public let numberOfLostAudioBuffers: Int
+        public let numberOfSentPackets: Int
+        public let numberOfSentBytes: Int
+        public let streamOutputBitrate: Float
+        public let numberOfCorruptedDataPackets: Int
+        public let numberOfDiscontinuties: Int
     }
 }

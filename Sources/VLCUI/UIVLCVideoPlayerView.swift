@@ -176,7 +176,21 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             currentAudioTrack: currentAudioTrack,
             subtitleTracks: zippedSubtitleTracks,
             audioTracks: zippedAudioTracks,
-            stats: media.stats ?? [:]
+            numberOfReadBytesOnInput: media.numberOfReadBytesOnInput,
+            inputBitrate: media.inputBitrate,
+            numberOfReadBytesOnDemux: media.numberOfReadBytesOnDemux,
+            demuxBitrate: media.demuxBitrate,
+            numberOfDecodedVideoBlocks: media.numberOfDecodedVideoBlocks,
+            numberOfDecodedAudioBlocks: media.numberOfDecodedAudioBlocks,
+            numberOfDisplayedPictures: media.numberOfDisplayedPictures,
+            numberOfLostPictures: media.numberOfLostPictures,
+            numberOfPlayedAudioBuffers: media.numberOfPlayedAudioBuffers,
+            numberOfLostAudioBuffers: media.numberOfLostAudioBuffers,
+            numberOfSentPackets: media.numberOfSentBytes,
+            numberOfSentBytes: media.numberOfSentBytes,
+            streamOutputBitrate: media.streamOutputBitrate,
+            numberOfCorruptedDataPackets: media.numberOfCorruptedDataPackets,
+            numberOfDiscontinuties: media.numberOfDiscontinuties
         )
     }
 
