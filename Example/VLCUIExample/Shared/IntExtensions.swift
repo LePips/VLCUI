@@ -1,6 +1,6 @@
 import Foundation
 
-extension Int32 {
+extension Int {
 
     var timeLabel: String {
         let formatter = DateComponentsFormatter()

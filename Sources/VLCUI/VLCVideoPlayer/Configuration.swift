@@ -16,8 +16,8 @@ public extension VLCVideoPlayer {
         public var aspectFill: Bool = false
         public var replay: Bool = false
         public var rate: ValueSelector<Float> = .auto
-        public var subtitleIndex: ValueSelector<Int32> = .auto
-        public var audioIndex: ValueSelector<Int32> = .auto
+        public var subtitleIndex: ValueSelector<Int> = .auto
+        public var audioIndex: ValueSelector<Int> = .auto
         public var subtitleSize: ValueSelector<Int> = .auto
         public var subtitleFont: ValueSelector<_PlatformFont> = .auto
         public var subtitleColor: ValueSelector<_PlatformColor> = .auto

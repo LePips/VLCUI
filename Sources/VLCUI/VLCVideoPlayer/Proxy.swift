@@ -42,13 +42,13 @@ public extension VLCVideoPlayer {
         }
 
         /// Jump forward a given amount of seconds
-        public func jumpForward(_ seconds: Int32) {
-            mediaPlayer?.jumpForward(seconds)
+        public func jumpForward(_ seconds: Int) {
+            mediaPlayer?.jumpForward(Int32(seconds))
         }
 
         /// Jump backward a given amount of seconds
-        public func jumpBackward(_ seconds: Int32) {
-            mediaPlayer?.jumpBackward(seconds)
+        public func jumpBackward(_ seconds: Int) {
+            mediaPlayer?.jumpBackward(Int32(seconds))
         }
 
         /// Go to the next frame
@@ -61,19 +61,19 @@ public extension VLCVideoPlayer {
         /// Set the subtitle track index
         ///
         /// **Note**: If there is no valid track with the given index, the track will default to disabled
-        public func setSubtitleTrack(_ index: ValueSelector<Int32>) {
+        public func setSubtitleTrack(_ index: ValueSelector<Int>) {
             guard let mediaPlayer = mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.subtitleTrackIndex(from: index)
-            mediaPlayer.currentVideoSubTitleIndex = newTrackIndex
+            mediaPlayer.currentVideoSubTitleIndex = Int32(newTrackIndex)
         }
 
         /// Set the audio track index
         ///
         /// **Note**: If there is no valid track with the given index, the track will default to disabled
-        public func setAudioTrack(_ index: ValueSelector<Int32>) {
+        public func setAudioTrack(_ index: ValueSelector<Int>) {
             guard let mediaPlayer = mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.audioTrackIndex(from: index)
-            mediaPlayer.currentVideoSubTitleIndex = newTrackIndex
+            mediaPlayer.currentVideoSubTitleIndex = Int32(newTrackIndex)
         }
 
         /// Set the subtitle delay
@@ -109,7 +109,7 @@ public extension VLCVideoPlayer {
                   let media = mediaPlayer.media else { return }
 
             guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
-            mediaPlayer.time = VLCTime(int: time.asTicks)
+            mediaPlayer.time = VLCTime(int: time.asTicks.asInt32)
         }
 
         /// Set the media subtitle size

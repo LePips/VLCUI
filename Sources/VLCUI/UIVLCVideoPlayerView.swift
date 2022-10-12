@@ -24,7 +24,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private var configuration: VLCVideoPlayer.Configuration
     private var proxy: VLCVideoPlayer.Proxy?
-    private let onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
+    private let onTicksUpdated: (Int, VLCVideoPlayer.PlaybackInformation) -> Void
     private let onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
     private let loggingInfo: (logger: VLCVideoPlayerLogger, level: VLCVideoPlayer.LoggingLevel)?
     private var currentMediaPlayer: VLCMediaPlayer?
@@ -44,7 +44,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
     init(
         configuration: VLCVideoPlayer.Configuration,
         proxy: VLCVideoPlayer.Proxy?,
-        onTicksUpdated: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void,
+        onTicksUpdated: @escaping (Int, VLCVideoPlayer.PlaybackInformation) -> Void,
         onStateUpdated: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void,
         loggingInfo: (VLCVideoPlayerLogger, VLCVideoPlayer.LoggingLevel)?
     ) {
@@ -97,7 +97,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
         if let loggingInfo = loggingInfo {
             newMediaPlayer.libraryInstance.debugLogging = true
-            newMediaPlayer.libraryInstance.debugLoggingLevel = loggingInfo.level.rawValue
+            newMediaPlayer.libraryInstance.debugLoggingLevel = loggingInfo.level.rawValue.asInt32
             newMediaPlayer.libraryInstance.debugLoggingTarget = self
         }
 
@@ -142,10 +142,10 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     private func constructPlaybackInformation(player: VLCMediaPlayer, media: VLCMedia) -> VLCVideoPlayer.PlaybackInformation {
 
-        let subtitleIndexes = player.videoSubTitlesIndexes as! [Int32]
+        let subtitleIndexes = player.videoSubTitlesIndexes as! [Int]
         let subtitleNames = player.videoSubTitlesNames as! [String]
 
-        let audioIndexes = player.audioTrackIndexes as! [Int32]
+        let audioIndexes = player.audioTrackIndexes as! [Int]
         let audioNames = player.audioTrackNames as! [String]
 
         let zippedSubtitleTracks = Dictionary(uniqueKeysWithValues: zip(subtitleIndexes, subtitleNames))
@@ -154,14 +154,14 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let currentSubtitleTrack: MediaTrack
         let currentAudioTrack: MediaTrack
 
-        if let currentValidSubtitleTrack = zippedSubtitleTracks[player.currentVideoSubTitleIndex] {
-            currentSubtitleTrack = (player.currentVideoSubTitleIndex, currentValidSubtitleTrack)
+        if let currentValidSubtitleTrack = zippedSubtitleTracks[player.currentVideoSubTitleIndex.asInt] {
+            currentSubtitleTrack = (player.currentVideoSubTitleIndex.asInt, currentValidSubtitleTrack)
         } else {
             currentSubtitleTrack = (index: -1, title: "Disable")
         }
 
-        if let currentValidAudioTrack = zippedAudioTracks[player.currentAudioTrackIndex] {
-            currentAudioTrack = (player.currentAudioTrackIndex, currentValidAudioTrack)
+        if let currentValidAudioTrack = zippedAudioTracks[player.currentAudioTrackIndex.asInt] {
+            currentAudioTrack = (player.currentAudioTrackIndex.asInt, currentValidAudioTrack)
         } else {
             currentAudioTrack = (index: -1, title: "Disable")
         }
@@ -169,7 +169,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         return VLCVideoPlayer.PlaybackInformation(
             startConfiguration: configuration,
             position: player.position,
-            length: media.length.intValue,
+            length: media.length.intValue.asInt,
             isSeekable: player.isSeekable,
             playbackRate: player.rate,
             currentSubtitleTrack: currentSubtitleTrack,
@@ -199,7 +199,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let currentTicks = player.time.intValue
         let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        onTicksUpdated(currentTicks, playbackInformation)
+        onTicksUpdated(currentTicks.asInt, playbackInformation)
 
         // Set playing state
         if lastPlayerState != .playing,
@@ -239,7 +239,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     private func setConfigurationValues(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
 
-        player.time = VLCTime(int: configuration.startTime.asTicks)
+        player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
 
         let defaultPlayerSpeed = player.rate(from: configuration.rate)
         player.fastForward(atRate: defaultPlayerSpeed)
@@ -251,10 +251,10 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         }
 
         let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
-        player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex
+        player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex.asInt32
 
         let defaultAudioTrackIndex = player.audioTrackIndex(from: configuration.audioIndex)
-        player.currentAudioTrackIndex = defaultAudioTrackIndex
+        player.currentAudioTrackIndex = defaultAudioTrackIndex.asInt32
 
         player.setSubtitleSize(configuration.subtitleSize)
         player.setSubtitleFont(configuration.subtitleFont)
@@ -269,7 +269,7 @@ extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
     public func handleMessage(_ message: String, debugLevel level: Int32) {
         guard let loggingInfo = loggingInfo,
               level >= loggingInfo.level.rawValue else { return }
-        let level = VLCVideoPlayer.LoggingLevel(rawValue: level) ?? .info
+        let level = VLCVideoPlayer.LoggingLevel(rawValue: level.asInt) ?? .info
         loggingInfo.logger.vlcVideoPlayer(didLog: message, at: level)
     }
 }

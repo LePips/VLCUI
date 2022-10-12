@@ -2,13 +2,13 @@ import Foundation
 
 public extension VLCVideoPlayer {
 
-    enum LoggingLevel: Int32 {
+    enum LoggingLevel: Int {
         case info
         case error
         case warning
         case debug
 
-        public init?(rawValue: Int32) {
+        public init?(rawValue: Int) {
             switch rawValue {
             case 0:
                 self = .info

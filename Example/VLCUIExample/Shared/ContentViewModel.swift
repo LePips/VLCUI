@@ -5,13 +5,13 @@ import VLCUI
 class ContentViewModel: ObservableObject {
 
     @Published
-    var ticks: Int32 = 0
+    var ticks: Int = 0
     @Published
     var playerState: VLCVideoPlayer.State = .opening
     @Published
     var position: Float = 0
     @Published
-    var totalTicks: Int32 = 0
+    var totalTicks: Int = 0
 
     let proxy: VLCVideoPlayer.Proxy = .init()
 

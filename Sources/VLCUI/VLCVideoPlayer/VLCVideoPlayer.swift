@@ -6,7 +6,7 @@ public struct VLCVideoPlayer: _PlatformRepresentable {
 
     private var configuration: VLCVideoPlayer.Configuration
     private var proxy: VLCVideoPlayer.Proxy?
-    private var onTicksUpdated: (Int32, VLCVideoPlayer.PlaybackInformation) -> Void
+    private var onTicksUpdated: (Int, VLCVideoPlayer.PlaybackInformation) -> Void
     private var onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
     private var loggingInfo: (VLCVideoPlayerLogger, LoggingLevel)?
 
@@ -61,7 +61,7 @@ public extension VLCVideoPlayer {
     }
 
     /// Sets the action that fires when the media ticks have been updated
-    func onTicksUpdated(_ action: @escaping (Int32, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
+    func onTicksUpdated(_ action: @escaping (Int, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
         copy(modifying: \.onTicksUpdated, with: action)
     }
 

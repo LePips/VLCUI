@@ -70,8 +70,8 @@ extension VLCMediaPlayer {
         #endif
     }
 
-    func subtitleTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int32>) -> Int32 {
-        guard let indexes = videoSubTitlesIndexes as? [Int32] else { return -1 }
+    func subtitleTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int>) -> Int {
+        guard let indexes = videoSubTitlesIndexes as? [Int] else { return -1 }
 
         switch track {
         case .auto:
@@ -81,8 +81,8 @@ extension VLCMediaPlayer {
         }
     }
 
-    func audioTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int32>) -> Int32 {
-        guard let indexes = audioTrackIndexes as? [Int32] else { return -1 }
+    func audioTrackIndex(from track: VLCVideoPlayer.ValueSelector<Int>) -> Int {
+        guard let indexes = audioTrackIndexes as? [Int] else { return -1 }
 
         switch track {
         case .auto:

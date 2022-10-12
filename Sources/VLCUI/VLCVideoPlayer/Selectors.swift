@@ -12,12 +12,12 @@ public extension VLCVideoPlayer {
 
     enum TimeSelector {
         /// Set the time in ticks
-        case ticks(Int32)
+        case ticks(Int)
 
         /// Set the time in seconds
-        case seconds(Int32)
+        case seconds(Int)
 
-        var asTicks: Int32 {
+        var asTicks: Int {
             switch self {
             case let .ticks(ticks):
                 return ticks
