@@ -16,7 +16,7 @@ import MobileVLCKit
 
 public extension VLCVideoPlayer {
 
-    class Proxy {
+    class Proxy: ObservableObject {
 
         var mediaPlayer: VLCMediaPlayer?
         var videoPlayerView: UIVLCVideoPlayerView?
