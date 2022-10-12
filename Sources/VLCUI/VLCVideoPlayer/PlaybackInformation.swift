@@ -11,8 +11,8 @@ public extension VLCVideoPlayer {
 
         public let currentSubtitleTrack: MediaTrack
         public let currentAudioTrack: MediaTrack
-        public let subtitleTracks: [Int: String]
-        public let audioTracks: [Int: String]
+        public let subtitleTracks: [MediaTrack]
+        public let audioTracks: [MediaTrack]
 
         public let numberOfReadBytesOnInput: Int
         public let inputBitrate: Float

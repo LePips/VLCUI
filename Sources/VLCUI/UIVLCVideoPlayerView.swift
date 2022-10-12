@@ -16,8 +16,6 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
-// TODO: Cleanup constructPlaybackInformation
-
 public class UIVLCVideoPlayerView: _PlatformView {
 
     private lazy var videoContentView = makeVideoContentView()
@@ -136,9 +134,21 @@ public class UIVLCVideoPlayerView: _PlatformView {
     }
 }
 
-// MARK: VLCMediaPlayerDelegate
+extension Optional {
 
-extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
+    func chaining(_ value: Wrapped) -> Wrapped {
+        switch self {
+        case .none:
+            return value
+        case let .some(wrapped):
+            return wrapped
+        }
+    }
+}
+
+// MARK: constructPlaybackInformation
+
+extension UIVLCVideoPlayerView {
 
     private func constructPlaybackInformation(player: VLCMediaPlayer, media: VLCMedia) -> VLCVideoPlayer.PlaybackInformation {
 
@@ -148,23 +158,15 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let audioIndexes = player.audioTrackIndexes as! [Int]
         let audioNames = player.audioTrackNames as! [String]
 
-        let zippedSubtitleTracks = Dictionary(uniqueKeysWithValues: zip(subtitleIndexes, subtitleNames))
-        let zippedAudioTracks = Dictionary(uniqueKeysWithValues: zip(audioIndexes, audioNames))
+        let subtitleTracks = zip(subtitleIndexes, subtitleNames).map { MediaTrack(index: $0, title: $1) }
+        let audioTracks = zip(audioIndexes, audioNames).map { MediaTrack(index: $0, title: $1) }
 
-        let currentSubtitleTrack: MediaTrack
-        let currentAudioTrack: MediaTrack
-
-        if let currentValidSubtitleTrack = zippedSubtitleTracks[player.currentVideoSubTitleIndex.asInt] {
-            currentSubtitleTrack = (player.currentVideoSubTitleIndex.asInt, currentValidSubtitleTrack)
-        } else {
-            currentSubtitleTrack = (index: -1, title: "Disable")
-        }
-
-        if let currentValidAudioTrack = zippedAudioTracks[player.currentAudioTrackIndex.asInt] {
-            currentAudioTrack = (player.currentAudioTrackIndex.asInt, currentValidAudioTrack)
-        } else {
-            currentAudioTrack = (index: -1, title: "Disable")
-        }
+        let currentSubtitleTrack: MediaTrack = subtitleTracks
+            .first(where: { $0.index == player.currentVideoSubTitleIndex.asInt })
+            .chaining(.init(index: -1, title: "Disable"))
+        let currentAudioTrack: MediaTrack = audioTracks
+            .first(where: { $0.index == player.currentAudioTrackIndex.asInt })
+            .chaining(.init(index: -1, title: "Disable"))
 
         return VLCVideoPlayer.PlaybackInformation(
             startConfiguration: configuration,
@@ -174,8 +176,8 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             playbackRate: player.rate,
             currentSubtitleTrack: currentSubtitleTrack,
             currentAudioTrack: currentAudioTrack,
-            subtitleTracks: zippedSubtitleTracks,
-            audioTracks: zippedAudioTracks,
+            subtitleTracks: subtitleTracks,
+            audioTracks: audioTracks,
             numberOfReadBytesOnInput: media.numberOfReadBytesOnInput,
             inputBitrate: media.inputBitrate,
             numberOfReadBytesOnDemux: media.numberOfReadBytesOnDemux,
@@ -193,6 +195,11 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             numberOfDiscontinuties: media.numberOfDiscontinuties
         )
     }
+}
+
+// MARK: VLCMediaPlayerDelegate
+
+extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     public func mediaPlayerTimeChanged(_ aNotification: Notification) {
         let player = aNotification.object as! VLCMediaPlayer
