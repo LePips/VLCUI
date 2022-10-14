@@ -35,19 +35,19 @@ extension VLCMediaPlayer {
     }
 
     func setSubtitleFont(_ font: VLCVideoPlayer.ValueSelector<_PlatformFont>) {
-        let value: String
-
         switch font {
         case .auto:
-            value = _PlatformFont.defaultSubtitleFont.fontName
+            setSubtitleFont(_PlatformFont.defaultSubtitleFont.fontName)
         case let .absolute(font):
-            value = font.fontName
+            setSubtitleFont(font.fontName)
         }
+    }
 
+    func setSubtitleFont(_ fontName: String) {
         #if !os(macOS)
         perform(
             Selector(("setTextRendererFont:")),
-            with: value
+            with: fontName
         )
         #endif
     }

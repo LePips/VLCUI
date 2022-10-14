@@ -129,6 +129,13 @@ public extension VLCVideoPlayer {
             mediaPlayer?.setSubtitleFont(font)
         }
 
+        /// Set the subtitle font using the given font name
+        ///
+        /// **Note**: Does not work on macOS
+        public func setSubtitleFont(_ fontName: String) {
+            mediaPlayer?.setSubtitleFont(fontName)
+        }
+
         /// Set the subtitle font color using the RGB values of the given `UIColor`
         ///
         /// **Note**: Does not work on macOS
