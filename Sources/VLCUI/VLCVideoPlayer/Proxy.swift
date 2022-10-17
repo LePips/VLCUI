@@ -73,7 +73,7 @@ public extension VLCVideoPlayer {
         public func setAudioTrack(_ index: ValueSelector<Int>) {
             guard let mediaPlayer = mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.audioTrackIndex(from: index)
-            mediaPlayer.currentVideoSubTitleIndex = Int32(newTrackIndex)
+            mediaPlayer.currentAudioTrackIndex = Int32(newTrackIndex)
         }
 
         /// Set the subtitle delay
