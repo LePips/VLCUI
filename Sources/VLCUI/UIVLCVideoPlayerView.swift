@@ -30,7 +30,6 @@ public class UIVLCVideoPlayerView: _PlatformView {
     private var hasSetCurrentConfigurationValues: Bool = false
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
-    private var cancellables = Set<AnyCancellable>()
 
     private var aspectFillScale: CGFloat {
         guard let currentMediaPlayer = currentMediaPlayer else { return 1 }
@@ -131,18 +130,6 @@ public class UIVLCVideoPlayerView: _PlatformView {
         view.backgroundColor = .black
         #endif
         return view
-    }
-}
-
-extension Optional {
-
-    func chaining(_ value: Wrapped) -> Wrapped {
-        switch self {
-        case .none:
-            return value
-        case let .some(wrapped):
-            return wrapped
-        }
     }
 }
 
