@@ -7,6 +7,15 @@ import AppKit
 import UIKit
 #endif
 
+extension CALayer {
+    
+    func recursive_render(in context: CGContext) {
+        render(in: context)
+        
+        sublayers?.forEach({ $0.recursive_render(in: context) })
+    }
+}
+
 extension _PlatformView {
 
     func apply(transform: CGAffineTransform) {
@@ -21,6 +30,12 @@ extension _PlatformView {
         #if !os(macOS)
         self.transform = transform
         #endif
+    }
+    
+    var uiImage: UIImage {
+        UIGraphicsImageRenderer(bounds: bounds).image { context in
+            layer.render(in: context.cgContext)
+        }
     }
 }
 

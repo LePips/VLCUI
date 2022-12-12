@@ -14,4 +14,5 @@ public typealias _PlatformView = UIView
 public typealias _PlatformRepresentable = UIViewRepresentable
 public typealias _PlatformColor = UIColor
 public typealias _PlatformFont = UIFont
+public typealias _PlatformImage = UIImage
 #endif

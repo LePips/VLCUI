@@ -152,5 +152,15 @@ public extension VLCVideoPlayer {
         public func playNewMedia(_ newConfiguration: Configuration) {
             videoPlayerView?.setupVLCMediaPlayer(with: newConfiguration)
         }
+        
+        @available(iOS 15.0, *)
+        public func startPictureInPicture() {
+            videoPlayerView?.startPictureInPicture()
+        }
+        
+        @available(iOS 15.0, *)
+        public func stopPictureInPicture() {
+            videoPlayerView?.renderPictureInPicture()
+        }
     }
 }

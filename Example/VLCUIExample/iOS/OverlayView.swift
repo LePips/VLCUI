@@ -1,3 +1,4 @@
+import AVKit
 import SwiftUI
 import VLCUI
 
@@ -14,7 +15,8 @@ struct OverlayView: View {
         HStack(spacing: 20) {
 
             Button {
-                viewModel.proxy.jumpBackward(15)
+//                viewModel.proxy.jumpBackward(15)
+                viewModel.proxy.startPictureInPicture()
             } label: {
                 Image(systemName: "gobackward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
@@ -41,7 +43,8 @@ struct OverlayView: View {
             }
 
             Button {
-                viewModel.proxy.jumpForward(15)
+//                viewModel.proxy.jumpForward(15)
+                viewModel.proxy.stopPictureInPicture()
             } label: {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 28, weight: .regular, design: .default))
@@ -69,6 +72,10 @@ struct OverlayView: View {
         .onChange(of: viewModel.position) { newValue in
             guard !isScrubbing else { return }
             currentPosition = newValue
+        }
+        .onAppear {
+            try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try! AVAudioSession.sharedInstance().setActive(true)
         }
     }
 }

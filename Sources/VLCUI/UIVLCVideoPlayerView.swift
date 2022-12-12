@@ -16,9 +16,10 @@ import TVVLCKit
 import MobileVLCKit
 #endif
 
-public class UIVLCVideoPlayerView: _PlatformView {
+public class UIVLCVideoPlayerView: UIView {
 
     private lazy var videoContentView = makeVideoContentView()
+    private lazy var redSquareView = makeRedSquareView()
 
     private var configuration: VLCVideoPlayer.Configuration
     private var proxy: VLCVideoPlayer.Proxy?
@@ -71,12 +72,20 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private func setupVideoContentView() {
         addSubview(videoContentView)
+        addSubview(redSquareView)
 
         NSLayoutConstraint.activate([
             videoContentView.topAnchor.constraint(equalTo: topAnchor),
             videoContentView.bottomAnchor.constraint(equalTo: bottomAnchor),
             videoContentView.leftAnchor.constraint(equalTo: leftAnchor),
             videoContentView.rightAnchor.constraint(equalTo: rightAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            redSquareView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            redSquareView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            redSquareView.heightAnchor.constraint(equalToConstant: 100),
+            redSquareView.widthAnchor.constraint(equalToConstant: 100),
         ])
     }
 
@@ -129,6 +138,13 @@ public class UIVLCVideoPlayerView: _PlatformView {
         #else
         view.backgroundColor = .black
         #endif
+        return view
+    }
+    
+    private func makeRedSquareView() -> UIView {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
         return view
     }
 }
@@ -265,5 +281,52 @@ extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
               level >= loggingInfo.level.rawValue else { return }
         let level = VLCVideoPlayer.LoggingLevel(rawValue: level.asInt) ?? .info
         loggingInfo.logger.vlcVideoPlayer(didLog: message, at: level)
+    }
+}
+
+@available(iOS 15.0, *)
+extension UIVLCVideoPlayerView: AVPIPUIKitUsable {
+    
+    var pipTargetView: UIView { self }
+    var renderer: AVPIPKitRenderer {
+        setupRendererIfNeeded()
+        return avUIKitRenderer.unsafelyUnwrapped
+    }
+    var exitPublisher: AnyPublisher<Void, Never> {
+        setupRendererIfNeeded()
+        return avUIKitRenderer.unsafelyUnwrapped.exitPublisher
+    }
+    
+    func startPictureInPicture() {
+        setupIfNeeded()
+        videoController?.start()
+    }
+    
+    func stopPictureInPicture() {
+        assert(videoController != nil)
+        videoController?.stop()
+    }
+    
+    // If you want to update the screen, execute the following additional code.
+    func renderPictureInPicture() {
+        setupRendererIfNeeded()
+        avUIKitRenderer?.render()
+    }
+    
+    // MARK: - Private
+    private func setupRendererIfNeeded() {
+        guard avUIKitRenderer == nil else {
+            return
+        }
+        
+        avUIKitRenderer = AVPIPUIKitRenderer(targetView: pipTargetView, policy: renderPolicy)
+    }
+    
+    private func setupIfNeeded() {
+        guard videoController == nil else {
+            return
+        }
+        
+        videoController = createVideoController()
     }
 }
