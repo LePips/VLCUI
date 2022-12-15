@@ -18,8 +18,8 @@ public extension VLCVideoPlayer {
 
     class Proxy: ObservableObject {
 
-        var mediaPlayer: VLCMediaPlayer?
-        var videoPlayerView: UIVLCVideoPlayerView?
+        weak var mediaPlayer: VLCMediaPlayer?
+        weak var videoPlayerView: UIVLCVideoPlayerView?
 
         public init() {
             self.mediaPlayer = nil
