@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 
 @available(iOS 15.0, *)
-enum AVPIPKitRenderPolicy {
+public enum AVPIPKitRenderPolicy {
     
     case once
     case preferredFramesPerSecond(Int)
@@ -18,7 +18,7 @@ enum AVPIPKitRenderPolicy {
 }
 
 @available(iOS 15.0, *)
-extension AVPIPKitRenderPolicy {
+public extension AVPIPKitRenderPolicy {
     
     var preferredFramesPerSecond: Int {
         switch self {
@@ -32,7 +32,7 @@ extension AVPIPKitRenderPolicy {
 }
 
 @available(iOS 15.0, *)
-protocol AVPIPKitUsable {
+public protocol AVPIPKitUsable {
     
     var renderer: AVPIPKitRenderer { get }
     

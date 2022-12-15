@@ -10,7 +10,7 @@ import Combine
 import UIKit
 
 @available(iOS 15.0, *)
-protocol AVPIPKitRenderer {
+public protocol AVPIPKitRenderer {
     
     var policy: AVPIPKitRenderPolicy { get }
     var renderPublisher: AnyPublisher<UIImage, Never> { get }
@@ -22,10 +22,10 @@ protocol AVPIPKitRenderer {
 }
 
 @available(iOS 15.0, *)
-final class AVPIPUIKitRenderer: AVPIPKitRenderer {
+public final class AVPIPUIKitRenderer: AVPIPKitRenderer {
     
-    let policy: AVPIPKitRenderPolicy
-    var renderPublisher: AnyPublisher<UIImage, Never> {
+    public let policy: AVPIPKitRenderPolicy
+    public var renderPublisher: AnyPublisher<UIImage, Never> {
         _render
             .filter { $0 != nil }
             .map { $0.unsafelyUnwrapped }
@@ -50,7 +50,7 @@ final class AVPIPUIKitRenderer: AVPIPKitRenderer {
         self.policy = policy
     }
     
-    func start() {
+    public func start() {
         if isRunning {
             return
         }
@@ -67,7 +67,7 @@ final class AVPIPUIKitRenderer: AVPIPKitRenderer {
         displayLink?.add(to: .main, forMode: .default)
     }
     
-    func stop() {
+    public func stop() {
         guard isRunning else {
             return
         }
@@ -77,7 +77,7 @@ final class AVPIPUIKitRenderer: AVPIPKitRenderer {
         isRunning = false
     }
     
-    func exit() {
+    public func exit() {
         _exit.send(())
     }
     

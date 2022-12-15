@@ -287,22 +287,22 @@ extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
 @available(iOS 15.0, *)
 extension UIVLCVideoPlayerView: AVPIPUIKitUsable {
     
-    var pipTargetView: UIView { self }
-    var renderer: AVPIPKitRenderer {
+    public var pipTargetView: UIView { self }
+    public var renderer: AVPIPKitRenderer {
         setupRendererIfNeeded()
         return avUIKitRenderer.unsafelyUnwrapped
     }
-    var exitPublisher: AnyPublisher<Void, Never> {
+    public var exitPublisher: AnyPublisher<Void, Never> {
         setupRendererIfNeeded()
         return avUIKitRenderer.unsafelyUnwrapped.exitPublisher
     }
     
-    func startPictureInPicture() {
+    public func startPictureInPicture() {
         setupIfNeeded()
         videoController?.start()
     }
     
-    func stopPictureInPicture() {
+    public func stopPictureInPicture() {
         assert(videoController != nil)
         videoController?.stop()
     }
