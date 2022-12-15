@@ -10,14 +10,8 @@ struct ContentView: View {
         ZStack(alignment: .bottom) {
             VLCVideoPlayer(configuration: viewModel.configuration)
                 .proxy(viewModel.proxy)
-                .onTicksUpdated { ticks, playbackInformation in
-                    viewModel.ticks = ticks
-                    viewModel.totalTicks = playbackInformation.length
-                    viewModel.position = playbackInformation.position
-                }
-                .onStateUpdated { state, _ in
-                    viewModel.playerState = state
-                }
+                .onStateUpdated(viewModel.onStateUpdated)
+                .onTicksUpdated(viewModel.onTicksUpdated)
 
             OverlayView(viewModel: viewModel)
                 .padding()

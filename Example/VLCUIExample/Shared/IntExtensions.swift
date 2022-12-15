@@ -9,6 +9,6 @@ extension Int {
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior = .pad
 
-        return formatter.string(from: TimeInterval(Int(self))) ?? "--:--"
+        return formatter.string(from: TimeInterval(self)) ?? "--:--"
     }
 }

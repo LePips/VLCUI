@@ -33,4 +33,14 @@ class ContentViewModel: ObservableObject {
     func setCustomPosition(_ newPosition: Float) {
         position = newPosition
     }
+
+    func onStateUpdated(_ newState: VLCVideoPlayer.State, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {
+        playerState = newState
+    }
+
+    func onTicksUpdated(_ newTicks: Int, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {
+        position = playbackInformation.position
+        ticks = newTicks
+        totalTicks = playbackInformation.length
+    }
 }
