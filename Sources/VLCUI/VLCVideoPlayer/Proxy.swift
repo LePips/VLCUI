@@ -43,12 +43,12 @@ public extension VLCVideoPlayer {
 
         /// Jump forward a given amount of seconds
         public func jumpForward(_ seconds: Int) {
-            mediaPlayer?.jumpForward(Int32(seconds))
+            mediaPlayer?.jumpForward(seconds.asInt32)
         }
 
         /// Jump backward a given amount of seconds
         public func jumpBackward(_ seconds: Int) {
-            mediaPlayer?.jumpBackward(Int32(seconds))
+            mediaPlayer?.jumpBackward(seconds.asInt32)
         }
 
         /// Go to the next frame
@@ -64,7 +64,7 @@ public extension VLCVideoPlayer {
         public func setSubtitleTrack(_ index: ValueSelector<Int>) {
             guard let mediaPlayer = mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.subtitleTrackIndex(from: index)
-            mediaPlayer.currentVideoSubTitleIndex = Int32(newTrackIndex)
+            mediaPlayer.currentVideoSubTitleIndex = newTrackIndex.asInt32
         }
 
         /// Set the audio track index
@@ -73,18 +73,18 @@ public extension VLCVideoPlayer {
         public func setAudioTrack(_ index: ValueSelector<Int>) {
             guard let mediaPlayer = mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.audioTrackIndex(from: index)
-            mediaPlayer.currentAudioTrackIndex = Int32(newTrackIndex)
+            mediaPlayer.currentAudioTrackIndex = newTrackIndex.asInt32
         }
 
         /// Set the subtitle delay
         public func setSubtitleDelay(_ interval: TimeSelector) {
-            let delay = Int(interval.asTicks) * 1000
+            let delay = interval.asTicks * 1000
             mediaPlayer?.currentVideoSubTitleDelay = delay
         }
 
         /// Set the audio delay
         public func setAudioDelay(_ interval: TimeSelector) {
-            let delay = Int(interval.asTicks) * 1000
+            let delay = interval.asTicks * 1000
             mediaPlayer?.currentAudioPlaybackDelay = delay
         }
 
