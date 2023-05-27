@@ -160,8 +160,8 @@ public extension VLCVideoPlayer {
             
             if let media = self.mediaPlayer?.media {
                 let thumbnailer = VLCMediaThumbnailer(media: media, andDelegate: self)
-                thumbnailer.thumbnailWidth = width
-                thumbnailer.thumbnailHeight = height
+                thumbnailer.thumbnailWidth = CGFloat(width)
+                thumbnailer.thumbnailHeight = CGFloat(height)
                 thumbnailer.snapshotPosition = position
                 thumbnailer.fetchThumbnail()
                 
