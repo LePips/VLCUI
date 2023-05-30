@@ -70,14 +70,27 @@ public class UIVLCVideoPlayerView: _PlatformView {
     }
 
     private func setupVideoContentView() {
-        addSubview(videoContentView)
+//        addSubview(videoContentView)
 
+//        NSLayoutConstraint.activate([
+//            videoContentView.topAnchor.constraint(equalTo: topAnchor),
+//            videoContentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            videoContentView.leftAnchor.constraint(equalTo: leftAnchor),
+//            videoContentView.rightAnchor.constraint(equalTo: rightAnchor),
+//        ])
+        
+        guard let renderingLayer = proxy?.renderingLayer else { return }
+        
+        addSubview(renderingLayer)
+        
         NSLayoutConstraint.activate([
-            videoContentView.topAnchor.constraint(equalTo: topAnchor),
-            videoContentView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            videoContentView.leftAnchor.constraint(equalTo: leftAnchor),
-            videoContentView.rightAnchor.constraint(equalTo: rightAnchor),
+            renderingLayer.topAnchor.constraint(equalTo: topAnchor),
+            renderingLayer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            renderingLayer.leftAnchor.constraint(equalTo: leftAnchor),
+            renderingLayer.rightAnchor.constraint(equalTo: rightAnchor),
         ])
+        
+        print("Added rendering layer")
     }
 
     func setupVLCMediaPlayer(with newConfiguration: VLCVideoPlayer.Configuration) {
@@ -89,7 +102,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
         let newMediaPlayer = VLCMediaPlayer()
         newMediaPlayer.media = media
-        newMediaPlayer.drawable = videoContentView
+        newMediaPlayer.drawable = proxy?.renderingLayer
         newMediaPlayer.delegate = self
 
         if let loggingInfo = loggingInfo {

@@ -20,10 +20,23 @@ public extension VLCVideoPlayer {
 
         weak var mediaPlayer: VLCMediaPlayer?
         weak var videoPlayerView: UIVLCVideoPlayerView?
+        
+        var renderingLayer: UIView!
 
         public init() {
             self.mediaPlayer = nil
             self.videoPlayerView = nil
+            
+            let view = _PlatformView(frame: .zero)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            
+            #if os(macOS)
+            view.layer?.backgroundColor = .black
+            #else
+            view.backgroundColor = .black
+            #endif
+            
+            self.renderingLayer = view
         }
 
         /// Play the current media
