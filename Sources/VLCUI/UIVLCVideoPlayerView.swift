@@ -196,13 +196,10 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         onTicksUpdated(currentTicks.asInt, playbackInformation)
 
         // Set playing state
-        if lastPlayerState != .playing,
-           abs(currentTicks - lastPlayerTicks) >= 200
-        {
+        if lastPlayerState != .playing, abs(currentTicks - lastPlayerTicks) >= 0 {
             onStateUpdated(.playing, playbackInformation)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
-
             if !hasSetCurrentConfigurationValues {
                 setConfigurationValues(with: player, from: configuration)
                 hasSetCurrentConfigurationValues = true
@@ -212,8 +209,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         // Replay
         if configuration.replay,
            lastPlayerState == .playing,
-           abs(player.media!.length.intValue - currentTicks) <= 500
-        {
+           abs(player.media!.length.intValue - currentTicks) <= 500 {
             configuration.autoPlay = true
             configuration.startTime = .ticks(0)
             setupVLCMediaPlayer(with: configuration)
@@ -223,33 +219,25 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
     public func mediaPlayerStateChanged(_ aNotification: Notification) {
         let player = aNotification.object as! VLCMediaPlayer
         guard player.state != .playing, player.state != lastPlayerState else { return }
-
         let wrappedState = VLCVideoPlayer.State(rawValue: player.state.rawValue) ?? .error
         let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
-
         onStateUpdated(wrappedState, playbackInformation)
         lastPlayerState = player.state
     }
 
     private func setConfigurationValues(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
-
         player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
-
         let defaultPlayerSpeed = player.rate(from: configuration.rate)
         player.fastForward(atRate: defaultPlayerSpeed)
-
         if configuration.aspectFill {
             videoContentView.scale(x: aspectFillScale, y: aspectFillScale)
         } else {
             videoContentView.apply(transform: .identity)
         }
-
         let defaultSubtitleTrackIndex = player.subtitleTrackIndex(from: configuration.subtitleIndex)
         player.currentVideoSubTitleIndex = defaultSubtitleTrackIndex.asInt32
-
         let defaultAudioTrackIndex = player.audioTrackIndex(from: configuration.audioIndex)
         player.currentAudioTrackIndex = defaultAudioTrackIndex.asInt32
-
         player.setSubtitleSize(configuration.subtitleSize)
         player.setSubtitleFont(configuration.subtitleFont)
         player.setSubtitleColor(configuration.subtitleColor)

@@ -20,7 +20,7 @@ public extension VLCVideoPlayer {
 
         weak var mediaPlayer: VLCMediaPlayer?
         weak var videoPlayerView: UIVLCVideoPlayerView?
-
+        
         public init() {
             self.mediaPlayer = nil
             self.videoPlayerView = nil
@@ -94,7 +94,13 @@ public extension VLCVideoPlayer {
             let newRate = mediaPlayer.rate(from: rate)
             mediaPlayer.fastForward(atRate: newRate)
         }
-
+        
+        /// Set the player volume
+        public func setVolume(_ volume: Int32) {
+            guard let mediaPlayer = mediaPlayer else { return }
+            mediaPlayer.audio?.volume = volume
+        }
+        
         /// Aspect fill depending on the video's content size and the view's bounds, based
         /// on the given percentage of completion
         ///
