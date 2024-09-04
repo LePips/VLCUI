@@ -27,6 +27,11 @@ public class UIVLCVideoPlayerView: _PlatformView {
     private let loggingInfo: (logger: VLCVideoPlayerLogger, level: VLCVideoPlayer.LoggingLevel)?
     private var currentMediaPlayer: VLCMediaPlayer?
 
+    // Note: necessary as the configuration values have to be set
+    //       after streams have been added and playback starts for
+    //       at least one tick-changed report. This could cause a
+    //       small, noticeable jump when playback starts.
+    private var hasSetConfiguration: Bool = false
     private var lastAspectFill: Float = 0
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
@@ -35,7 +40,6 @@ public class UIVLCVideoPlayerView: _PlatformView {
         guard let currentMediaPlayer else { return 1 }
         let videoSize = currentMediaPlayer.videoSize
         let fillSize = CGSize.aspectFill(aspectRatio: videoSize, minimumSize: videoContentView.bounds.size)
-        print(fillSize)
         return fillSize.scale(other: videoContentView.bounds.size)
     }
 
@@ -103,11 +107,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
             newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
         }
 
-        setConfigurationValues(
-            with: newMediaPlayer,
-            from: newConfiguration
-        )
-
+        hasSetConfiguration = false
         configuration = newConfiguration
         currentMediaPlayer = newMediaPlayer
         proxy?.mediaPlayer = newMediaPlayer
@@ -208,7 +208,16 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
         let currentTicks = player.time.intValue
         let playbackInformation = constructPlaybackInformation(player: player, media: player.media!)
 
-        onTicksUpdated(currentTicks.asInt, playbackInformation)
+        if !hasSetConfiguration {
+            setConfigurationValues(
+                with: player,
+                from: configuration
+            )
+
+            hasSetConfiguration = true
+        } else {
+            onTicksUpdated(currentTicks.asInt, playbackInformation)
+        }
 
         // Set playing state
         if lastPlayerState != .playing,
@@ -243,7 +252,9 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     private func setConfigurationValues(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
 
-        player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
+        if configuration.startTime.asTicks != 0 {
+            player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
+        }
 
         let defaultPlayerSpeed = player.rate(from: configuration.rate)
         player.fastForward(atRate: defaultPlayerSpeed)
