@@ -27,14 +27,15 @@ public class UIVLCVideoPlayerView: _PlatformView {
     private let loggingInfo: (logger: VLCVideoPlayerLogger, level: VLCVideoPlayer.LoggingLevel)?
     private var currentMediaPlayer: VLCMediaPlayer?
 
-    private var hasSetCurrentConfigurationValues: Bool = false
+    private var lastAspectFill: Float = 0
     private var lastPlayerTicks: Int32 = 0
     private var lastPlayerState: VLCMediaPlayerState = .opening
 
     private var aspectFillScale: CGFloat {
-        guard let currentMediaPlayer = currentMediaPlayer else { return 1 }
+        guard let currentMediaPlayer else { return 1 }
         let videoSize = currentMediaPlayer.videoSize
         let fillSize = CGSize.aspectFill(aspectRatio: videoSize, minimumSize: videoContentView.bounds.size)
+        print(fillSize)
         return fillSize.scale(other: videoContentView.bounds.size)
     }
 
@@ -92,7 +93,7 @@ public class UIVLCVideoPlayerView: _PlatformView {
         newMediaPlayer.drawable = videoContentView
         newMediaPlayer.delegate = self
 
-        if let loggingInfo = loggingInfo {
+        if let loggingInfo {
             newMediaPlayer.libraryInstance.debugLogging = true
             newMediaPlayer.libraryInstance.debugLoggingLevel = loggingInfo.level.rawValue.asInt32
             newMediaPlayer.libraryInstance.debugLoggingTarget = self
@@ -102,10 +103,14 @@ public class UIVLCVideoPlayerView: _PlatformView {
             newMediaPlayer.addPlaybackSlave(child.url, type: child.type.asVLCSlaveType, enforce: child.enforce)
         }
 
+        setConfigurationValues(
+            with: newMediaPlayer,
+            from: newConfiguration
+        )
+
         configuration = newConfiguration
         currentMediaPlayer = newMediaPlayer
         proxy?.mediaPlayer = newMediaPlayer
-        hasSetCurrentConfigurationValues = false
         lastPlayerTicks = 0
         lastPlayerState = .opening
 
@@ -115,9 +120,11 @@ public class UIVLCVideoPlayerView: _PlatformView {
     }
 
     func setAspectFill(with percentage: Float) {
-        guard percentage >= 0 && percentage <= 1 else { return }
-        let scale = 1 + CGFloat(percentage) * (self.aspectFillScale - 1)
-        self.videoContentView.scale(x: scale, y: scale)
+        guard percentage >= 0, percentage <= 1 else { return }
+        let scale = 1 + CGFloat(percentage) * (aspectFillScale - 1)
+        videoContentView.scale(x: scale, y: scale)
+
+        lastAspectFill = percentage
     }
 
     private func makeVideoContentView() -> _PlatformView {
@@ -131,6 +138,14 @@ public class UIVLCVideoPlayerView: _PlatformView {
         #endif
         return view
     }
+
+    #if !os(macOS)
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+
+        setAspectFill(with: lastAspectFill)
+    }
+    #endif
 }
 
 // MARK: constructPlaybackInformation
@@ -202,11 +217,6 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
             onStateUpdated(.playing, playbackInformation)
             lastPlayerState = .playing
             lastPlayerTicks = currentTicks
-
-            if !hasSetCurrentConfigurationValues {
-                setConfigurationValues(with: player, from: configuration)
-                hasSetCurrentConfigurationValues = true
-            }
         }
 
         // Replay
@@ -261,8 +271,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 extension UIVLCVideoPlayerView: VLCLibraryLogReceiverProtocol {
 
     public func handleMessage(_ message: String, debugLevel level: Int32) {
-        guard let loggingInfo = loggingInfo,
-              level >= loggingInfo.level.rawValue else { return }
+        guard let loggingInfo, level >= loggingInfo.level.rawValue else { return }
         let level = VLCVideoPlayer.LoggingLevel(rawValue: level.asInt) ?? .info
         loggingInfo.logger.vlcVideoPlayer(didLog: message, at: level)
     }

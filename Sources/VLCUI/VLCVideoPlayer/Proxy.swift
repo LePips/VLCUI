@@ -62,7 +62,7 @@ public extension VLCVideoPlayer {
         ///
         /// **Note**: If there is no valid track with the given index, the track will default to disabled
         public func setSubtitleTrack(_ index: ValueSelector<Int>) {
-            guard let mediaPlayer = mediaPlayer else { return }
+            guard let mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.subtitleTrackIndex(from: index)
             mediaPlayer.currentVideoSubTitleIndex = newTrackIndex.asInt32
         }
@@ -71,7 +71,7 @@ public extension VLCVideoPlayer {
         ///
         /// **Note**: If there is no valid track with the given index, the track will default to disabled
         public func setAudioTrack(_ index: ValueSelector<Int>) {
-            guard let mediaPlayer = mediaPlayer else { return }
+            guard let mediaPlayer else { return }
             let newTrackIndex = mediaPlayer.audioTrackIndex(from: index)
             mediaPlayer.currentAudioTrackIndex = newTrackIndex.asInt32
         }
@@ -90,7 +90,7 @@ public extension VLCVideoPlayer {
 
         /// Set the player rate
         public func setRate(_ rate: ValueSelector<Float>) {
-            guard let mediaPlayer = mediaPlayer else { return }
+            guard let mediaPlayer else { return }
             let newRate = mediaPlayer.rate(from: rate)
             mediaPlayer.fastForward(atRate: newRate)
         }
@@ -105,7 +105,7 @@ public extension VLCVideoPlayer {
 
         /// Set the player time
         public func setTime(_ time: TimeSelector) {
-            guard let mediaPlayer = mediaPlayer,
+            guard let mediaPlayer,
                   let media = mediaPlayer.media else { return }
 
             guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
