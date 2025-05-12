@@ -12,7 +12,9 @@ class ContentViewModel: ObservableObject {
     var position: Float = 0
     @Published
     var totalTicks: Int = 0
-
+    @Published
+    var isRecording = false
+    
     let proxy: VLCVideoPlayer.Proxy = .init()
 
     var configuration: VLCVideoPlayer.Configuration {
