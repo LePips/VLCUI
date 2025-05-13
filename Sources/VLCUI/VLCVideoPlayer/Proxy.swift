@@ -50,6 +50,16 @@ public extension VLCVideoPlayer {
         public func jumpBackward(_ seconds: Int) {
             mediaPlayer?.jumpBackward(seconds.asInt32)
         }
+        
+        /// Jump forward a given amount of seconds
+        public func jumpForward(_ seconds: TimeInterval) {
+            mediaPlayer?.jumpForward(Int32(seconds))
+        }
+        
+        /// Jump backward a given amount of seconds
+        public func jumpBackward(_ seconds: TimeInterval) {
+            mediaPlayer?.jumpBackward(Int32(seconds))
+        }
 
         /// Go to the next frame
         ///
@@ -96,12 +106,15 @@ public extension VLCVideoPlayer {
         }
 
         /// Aspect fill depending on the video's content size and the view's bounds, based
-        /// on the given percentage of completion
+        /// on the given percentage of completion.
         ///
-        /// **Note**: Does not work on macOS
+        /// Alternatively, you can perform your own aspect fill or zoom based on
+        /// `PlaybackInformation.videoSize` when available.
+        #if os(iOS) || os(tvOS)
         public func aspectFill(_ percentage: Float) {
             videoPlayerView?.setAspectFill(with: percentage)
         }
+        #endif
 
         /// Set the player time
         public func setTime(_ time: TimeSelector) {
@@ -116,32 +129,26 @@ public extension VLCVideoPlayer {
         ///
         /// **Note**: Due to VLCKit, a given size does not accurately represent a font size and magnitudes are inverted.
         /// Larger values indicate a smaller font and smaller values indicate a larger font.
-        ///
-        /// **Note**: Does not work on macOS
+        #if os(iOS) || os(tvOS)
         public func setSubtitleSize(_ size: ValueSelector<Int>) {
             mediaPlayer?.setSubtitleSize(size)
         }
 
         /// Set the subtitle font using the font name of the given `UIFont`
-        ///
-        /// **Note**: Does not work on macOS
         public func setSubtitleFont(_ font: ValueSelector<_PlatformFont>) {
             mediaPlayer?.setSubtitleFont(font)
         }
 
         /// Set the subtitle font using the given font name
-        ///
-        /// **Note**: Does not work on macOS
         public func setSubtitleFont(_ fontName: String) {
             mediaPlayer?.setSubtitleFont(fontName)
         }
 
         /// Set the subtitle font color using the RGB values of the given `UIColor`
-        ///
-        /// **Note**: Does not work on macOS
         public func setSubtitleColor(_ color: ValueSelector<_PlatformColor>) {
             mediaPlayer?.setSubtitleColor(color)
         }
+        #endif
 
         /// Add a playback child
         public func addPlaybackChild(_ child: PlaybackChild) {

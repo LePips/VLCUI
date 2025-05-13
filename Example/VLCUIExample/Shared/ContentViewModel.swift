@@ -19,6 +19,9 @@ class ContentViewModel: ObservableObject {
         let configuration = VLCVideoPlayer
             .Configuration(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
         configuration.autoPlay = true
+
+        configuration.startTime = .seconds(15)
+        configuration.replay = true
         return configuration
     }
 

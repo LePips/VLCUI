@@ -15,14 +15,23 @@ public extension VLCVideoPlayer {
         case ticks(Int)
 
         /// Set the time in seconds
-        case seconds(Int)
+        case seconds(TimeInterval)
 
-        var asTicks: Int {
+        public var asTicks: Int {
             switch self {
             case let .ticks(ticks):
                 return ticks
             case let .seconds(seconds):
-                return seconds * 1000
+                return Int(seconds * 1000)
+            }
+        }
+        
+        public var asSeconds: TimeInterval {
+            switch self {
+            case let .ticks(ticks):
+                return TimeInterval(ticks) / 1_000
+            case let .seconds(seconds):
+                return seconds
             }
         }
     }

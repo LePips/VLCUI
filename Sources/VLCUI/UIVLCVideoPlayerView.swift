@@ -22,8 +22,9 @@ public class UIVLCVideoPlayerView: _PlatformView {
 
     private var configuration: VLCVideoPlayer.Configuration
     private var proxy: VLCVideoPlayer.Proxy?
-    private let onTicksUpdated: (Int, VLCVideoPlayer.PlaybackInformation) -> Void
+    private let onSecondsUpdated: (TimeInterval, VLCVideoPlayer.PlaybackInformation) -> Void
     private let onStateUpdated: (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void
+    private let onTicksUpdated: (Int, VLCVideoPlayer.PlaybackInformation) -> Void
     private let loggingInfo: (logger: VLCVideoPlayerLogger, level: VLCVideoPlayer.LoggingLevel)?
     private var currentMediaPlayer: VLCMediaPlayer?
 
@@ -46,14 +47,16 @@ public class UIVLCVideoPlayerView: _PlatformView {
     init(
         configuration: VLCVideoPlayer.Configuration,
         proxy: VLCVideoPlayer.Proxy?,
-        onTicksUpdated: @escaping (Int, VLCVideoPlayer.PlaybackInformation) -> Void,
+        onSecondsUpdated: @escaping (TimeInterval, VLCVideoPlayer.PlaybackInformation) -> Void,
         onStateUpdated: @escaping (VLCVideoPlayer.State, VLCVideoPlayer.PlaybackInformation) -> Void,
+        onTicksUpdated: @escaping (Int, VLCVideoPlayer.PlaybackInformation) -> Void,
         loggingInfo: (VLCVideoPlayerLogger, VLCVideoPlayer.LoggingLevel)?
     ) {
         self.configuration = configuration
         self.proxy = proxy
-        self.onTicksUpdated = onTicksUpdated
+        self.onSecondsUpdated = onSecondsUpdated
         self.onStateUpdated = onStateUpdated
+        self.onTicksUpdated = onTicksUpdated
         self.loggingInfo = loggingInfo
         super.init(frame: .zero)
 
@@ -176,6 +179,7 @@ extension UIVLCVideoPlayerView {
             length: media.length.intValue.asInt,
             isSeekable: player.isSeekable,
             playbackRate: player.rate,
+            videoSize: player.videoSize,
             currentSubtitleTrack: currentSubtitleTrack,
             currentAudioTrack: currentAudioTrack,
             subtitleTracks: subtitleTracks,
@@ -216,6 +220,7 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
             hasSetConfiguration = true
         } else {
+            onSecondsUpdated(TimeInterval(currentTicks) / 1_000, playbackInformation)
             onTicksUpdated(currentTicks.asInt, playbackInformation)
         }
 
