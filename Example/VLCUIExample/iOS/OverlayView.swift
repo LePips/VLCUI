@@ -20,18 +20,17 @@ struct OverlayView: View {
     var body: some View {
         HStack(spacing: 20) {
 
-            
-            Button(action: {
+            Button {
                 if viewModel.isRecording {
                     viewModel.proxy.stopRecording()
                     viewModel.isRecording.toggle()
                 } else {
                     let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let isRecording = viewModel.proxy.startRecording(directoryPath: documentsPath.path)
+                    let isRecording = viewModel.proxy.startRecording(atPath: documentsPath.path)
                     print("Recording Path:", documentsPath.path)
                     viewModel.isRecording = isRecording
                 }
-            }) {
+            } label: {
                 if #available(iOS 17.0, *) {
                      recordButton
                         .symbolEffect(.pulse, isActive: viewModel.isRecording)
@@ -89,7 +88,7 @@ struct OverlayView: View {
                     Text(viewModel.negativeTimeLabel)
                         .frame(width: 50)
                 }
-            }.disabled(viewModel.isRecording)
+            }
             
         }
         .onChange(of: isScrubbing) { isScrubbing in

@@ -154,38 +154,25 @@ public extension VLCVideoPlayer {
         }
 
         /// Starts the recording process
-        /// - Parameter directoryPath: The directory path where the recording will be saved
+        /// - Parameter atPath: The directory path where the recording will be saved
         /// - Returns: Indicates whether the recording started successfully
-        public func startRecording(directoryPath: String) -> Bool {
+        public func startRecording(atPath: String) -> Bool {
             guard let mediaPlayer else { return false }
-            guard mediaPlayer.isPlaying else { return false }
-            mediaPlayer.startRecording(atPath: directoryPath)
+            mediaPlayer.startRecording(atPath: atPath)
             return true
         }
         
         /// Stops the recording process
-        /// - Returns: Indicates whether the recording was stopped successfully
         public func stopRecording() {
             mediaPlayer?.stopRecording()
         }
 
         /// Set the video aspect ratio
-        /// - Parameter ratio: The aspect ratio to set (e.g. "4:3", "16:9", "16:10", "1:1")
-        /***
-            "16:9" (widescreen)
-            "4:3" (standard)
-            "16:10" (widescreen)
-            "1:1" (square)
-            "2.21:1" (cinema)
-            "2.35:1" (cinema)
-            "2.39:1" (cinema)
-            "5:4" (computer)
-            "5:3" (super 16mm)
-            "1.85:1" (cinema)
-            "2.20:1" (cinema)
-        */
-        public func setAspectRatio(_ ratio: String) {
-            ratio.withCString { cString in
+        /// - Parameter ratio: The aspect ratio to set using the `AspectRatio` enum.
+        public func setAspectRatio(_ ratio: VLCVideoPlayer.AspectRatio) {
+            guard ratio != .default else { mediaPlayer?.videoAspectRatio = nil; return }
+            
+            ratio.rawValue.withCString { cString in
                 mediaPlayer?.videoAspectRatio = UnsafeMutablePointer(mutating: cString)
             }
         }
