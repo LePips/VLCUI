@@ -1,14 +1,21 @@
 import Foundation
 
-extension Int {
+struct RuntimeFormatStyle: FormatStyle {
+    
+    func format(_ value: Int) -> String {
+        guard value >= 0 else {
+             return "--:--"
+         }
 
-    var timeLabel: String {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior = .pad
+        let minutes = (value / 60).formatted(.number.precision(.integerLength(2)))
+        let seconds = (value % 60).formatted(.number.precision(.integerLength(2)))
+        return "\(minutes):\(seconds)"
+    }
+}
 
-        return formatter.string(from: TimeInterval(self)) ?? "--:--"
+extension FormatStyle where Self == RuntimeFormatStyle {
+    
+    static var runtime: RuntimeFormatStyle {
+        RuntimeFormatStyle()
     }
 }

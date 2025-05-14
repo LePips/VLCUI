@@ -24,13 +24,13 @@ class ContentViewModel: ObservableObject {
         return configuration
     }
 
-    var positiveTimeLabel: String {
-        (ticks.roundDownNearestThousand / 1000).timeLabel
-    }
-
-    var negativeTimeLabel: String {
-        ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
-    }
+//    var positiveTimeLabel: String {
+//        (ticks.roundDownNearestThousand / 1000).timeLabel
+//    }
+//
+//    var negativeTimeLabel: String {
+//        ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
+//    }
 
     func setCustomPosition(_ newPosition: Float) {
         position = newPosition
