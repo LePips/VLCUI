@@ -40,24 +40,14 @@ public extension VLCVideoPlayer {
         public func stop() {
             mediaPlayer?.stop()
         }
-
-        /// Jump forward a given amount of seconds
-        public func jumpForward(_ seconds: Int) {
-            mediaPlayer?.jumpForward(seconds.asInt32)
-        }
-
-        /// Jump backward a given amount of seconds
-        public func jumpBackward(_ seconds: Int) {
-            mediaPlayer?.jumpBackward(seconds.asInt32)
-        }
         
         /// Jump forward a given amount of seconds
-        public func jumpForward(_ seconds: TimeInterval) {
+        public func jumpForward(seconds: TimeInterval) {
             mediaPlayer?.jumpForward(Int32(seconds))
         }
         
         /// Jump backward a given amount of seconds
-        public func jumpBackward(_ seconds: TimeInterval) {
+        public func jumpBackward(seconds: TimeInterval) {
             mediaPlayer?.jumpBackward(Int32(seconds))
         }
 

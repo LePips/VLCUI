@@ -22,21 +22,15 @@ class ContentViewModel: ObservableObject {
             .Configuration(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
         configuration.autoPlay = true
 
-        configuration.startTime = .seconds(15)
-        configuration.replay = true
         return configuration
     }
-
-//    var positiveTimeLabel: String {
-//        (ticks.roundDownNearestThousand / 1000).timeLabel
-//    }
-//
-//    var negativeTimeLabel: String {
-//        ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
-//    }
-
-    func setCustomPosition(_ newPosition: Float) {
-        position = newPosition
+    
+    var positiveSeconds: Int {
+        ticks.roundDownNearestThousand / 1000
+    }
+    
+    var negativeSeconds: Int {
+        (totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000
     }
 
     func onStateUpdated(_ newState: VLCVideoPlayer.State, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {

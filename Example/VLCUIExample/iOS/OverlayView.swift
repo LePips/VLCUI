@@ -6,17 +6,9 @@ struct OverlayView: View {
     @ObservedObject
     var viewModel: ContentViewModel
     @State
-    var isScrubbing: Bool = false
+    private var isScrubbing: Bool = false
     @State
-    var currentPosition: Float = 0
-    
-    private var positiveSeconds: Int {
-        viewModel.ticks.roundDownNearestThousand / 1000
-    }
-    
-    private var negativeSeconds: Int {
-        (viewModel.totalTicks.roundDownNearestThousand - viewModel.ticks.roundDownNearestThousand) / 1000
-    }
+    private var currentPosition: Float = 0
     
     var body: some View {
         HStack(spacing: 20) {
@@ -33,10 +25,10 @@ struct OverlayView: View {
                 }
             }
             .foregroundStyle(viewModel.isRecording ? .red : .accentColor)
-//            .symbolEffect(.pulse, value: viewModel.isRecording)
+            .symbolEffect(.pulse, value: viewModel.isRecording)
             
             Button("Go backward", systemImage: "gobackward.15") {
-                viewModel.proxy.jumpBackward(15)
+                viewModel.proxy.jumpBackward(seconds: 15)
             }
 
             Button {
@@ -59,14 +51,12 @@ struct OverlayView: View {
             }
 
             Button("Go forward", systemImage: "goforward.15") {
-                viewModel.proxy.jumpForward(15)
+                viewModel.proxy.jumpForward(seconds: 15)
             }
             
             HStack(spacing: 5) {
-                Text(positiveSeconds, format: .runtime)
+                Text(viewModel.positiveSeconds, format: .runtime)
                     .frame(width: 50)
-                
-                Text(123, format: .number)
 
                 Slider(
                     value: $currentPosition,
@@ -75,24 +65,21 @@ struct OverlayView: View {
                     isScrubbing = isEditing
                 }
 
-                Text(negativeSeconds, format: .runtime)
+                Text(viewModel.negativeSeconds, format: .runtime)
                     .frame(width: 50)
             }
             .font(.system(size: 18, weight: .regular, design: .default))
+            .monospacedDigit()
         }
         .labelStyle(.iconOnly)
         .font(.system(size: 28, weight: .regular, design: .default))
-        .onChange(of: isScrubbing) { isScrubbing in
+        .onChange(of: isScrubbing) {
             guard !isScrubbing else { return }
             viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int(currentPosition * 100) / 100))
         }
-        .onChange(of: viewModel.position) { newValue in
+        .onChange(of: viewModel.position) {
             guard !isScrubbing else { return }
-            currentPosition = newValue
+            currentPosition = viewModel.position
         }
     }
-}
-
-#Preview {
-    OverlayView(viewModel: .init())
 }
