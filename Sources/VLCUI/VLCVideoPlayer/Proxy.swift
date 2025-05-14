@@ -170,7 +170,10 @@ public extension VLCVideoPlayer {
         /// Set the video aspect ratio
         /// - Parameter ratio: The aspect ratio to set using the `AspectRatio` enum.
         public func setAspectRatio(_ ratio: VLCVideoPlayer.AspectRatio) {
-            guard ratio != .default else { mediaPlayer?.videoAspectRatio = nil; return }
+            guard ratio != .default else {
+                mediaPlayer?.videoAspectRatio = nil
+                return
+            }
             
             ratio.rawValue.withCString { cString in
                 mediaPlayer?.videoAspectRatio = UnsafeMutablePointer(mutating: cString)

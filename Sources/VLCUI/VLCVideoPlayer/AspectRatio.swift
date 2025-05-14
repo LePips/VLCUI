@@ -8,8 +8,7 @@
 import Foundation
 
 public extension VLCVideoPlayer {
-    /// Set the video aspect ratio
-    /// - Parameter ratio: The aspect ratio to set using the `AspectRatio` enum.
+    /// Represents supported video aspect ratios for the VLCVideoPlayer.
     enum AspectRatio: String {
         case `default` = "default"
         case widescreen16x9 = "16:9"
