@@ -155,7 +155,6 @@ public extension VLCVideoPlayer {
 
         /// Starts the recording process
         /// - Parameter atPath: The directory path where the recording will be saved
-        /// - Returns: Indicates whether the recording started successfully
         public func startRecording(atPath path: String) {
             mediaPlayer?.startRecording(atPath: path)
         }

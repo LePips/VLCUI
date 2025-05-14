@@ -24,13 +24,11 @@ struct OverlayView: View {
             Button("Record", systemImage: "record.circle") {
                 if viewModel.isRecording {
                     viewModel.proxy.stopRecording()
-                    viewModel.isRecording.toggle()
+                    viewModel.isRecording = false
                 } else {
                     let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                     print("Recording Path:", documentsPath.path)
-                    
                     viewModel.proxy.startRecording(atPath: documentsPath.path)
-                    
                     viewModel.isRecording = true
                 }
             }
