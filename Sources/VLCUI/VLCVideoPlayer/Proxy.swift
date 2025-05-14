@@ -152,5 +152,29 @@ public extension VLCVideoPlayer {
         public func playNewMedia(_ newConfiguration: Configuration) {
             videoPlayerView?.setupVLCMediaPlayer(with: newConfiguration)
         }
+
+        /// Starts the recording process
+        /// - Parameter atPath: The directory path where the recording will be saved
+        public func startRecording(atPath path: String) {
+            mediaPlayer?.startRecording(atPath: path)
+        }
+        
+        /// Stops the recording process
+        public func stopRecording() {
+            mediaPlayer?.stopRecording()
+        }
+
+        /// Set the video aspect ratio
+        /// - Parameter ratio: The aspect ratio to set using the `AspectRatio` enum.
+        public func setAspectRatio(_ ratio: VLCVideoPlayer.AspectRatio) {
+            guard ratio != .default else {
+                mediaPlayer?.videoAspectRatio = nil
+                return
+            }
+            
+            ratio.rawValue.withCString { cString in
+                mediaPlayer?.videoAspectRatio = UnsafeMutablePointer(mutating: cString)
+            }
+        }
     }
 }
