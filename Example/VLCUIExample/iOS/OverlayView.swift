@@ -23,12 +23,12 @@ struct OverlayView: View {
             Button {
                 if viewModel.isRecording {
                     viewModel.proxy.stopRecording()
-                    viewModel.isRecording.toggle()
+                    viewModel.isRecording = false
                 } else {
                     let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let isRecording = viewModel.proxy.startRecording(atPath: documentsPath.path)
                     print("Recording Path:", documentsPath.path)
-                    viewModel.isRecording = isRecording
+                    viewModel.proxy.startRecording(atPath: documentsPath.path)
+                    viewModel.isRecording = true
                 }
             } label: {
                 if #available(iOS 17.0, *) {
