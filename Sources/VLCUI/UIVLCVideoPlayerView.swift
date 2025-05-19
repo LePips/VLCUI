@@ -1,6 +1,4 @@
 import Combine
-import Foundation
-import MediaPlayer
 
 #if os(macOS)
 import AppKit

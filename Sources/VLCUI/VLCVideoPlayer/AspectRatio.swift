@@ -1,16 +1,7 @@
-//
-//  File.swift
-//  VLCUI
-//
-//  Created by Nevzat BOZKURT on 13.05.2025.
-//
-
-import Foundation
-
 public extension VLCVideoPlayer {
     /// Represents supported video aspect ratios for the VLCVideoPlayer.
     enum AspectRatio: String {
-        case `default` = "default"
+        case `default`
         case widescreen16x9 = "16:9"
         case standard4x3 = "4:3"
         case widescreen16x10 = "16:10"

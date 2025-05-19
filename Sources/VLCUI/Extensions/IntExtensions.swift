@@ -1,5 +1,3 @@
-import Foundation
-
 public extension Int {
 
     // Round down to nearest thousand

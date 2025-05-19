@@ -5,53 +5,64 @@ struct OverlayView: View {
 
     @ObservedObject
     var viewModel: ContentViewModel
+    @State
+    private var isScrubbing: Bool = false
+    @State
+    private var currentPosition: Float = 0
 
     var body: some View {
-        VStack {
+        HStack(spacing: 20) {
+
             HStack(spacing: 5) {
-                Text(viewModel.positiveTimeLabel)
+                Text(viewModel.positiveSeconds, format: .runtime)
+                    .frame(width: 50)
 
                 Capsule()
                     .frame(width: 10, height: 2)
 
-                Text(viewModel.negativeTimeLabel)
+                Text(viewModel.negativeSeconds, format: .runtime)
+                    .frame(width: 50)
+            }
+            .font(.system(size: 18, weight: .regular, design: .default))
+            .monospacedDigit()
+
+            Button("Go backward", systemImage: "gobackward.15") {
+                viewModel.proxy.jumpBackward(15)
             }
 
-            HStack {
-                Button {
-                    viewModel.proxy.jumpBackward(15)
-                } label: {
-                    Image(systemName: "gobackward.15")
-                        .font(.system(size: 28, weight: .regular, design: .default))
+            Button {
+                if viewModel.playerState == .playing {
+                    viewModel.proxy.pause()
+                } else {
+                    viewModel.proxy.play()
                 }
-                .buttonStyle(.plain)
-
-                Button {
+            } label: {
+                Group {
                     if viewModel.playerState == .playing {
-                        viewModel.proxy.pause()
+                        Image(systemName: "pause.circle.fill")
+                    } else if viewModel.playerState == .buffering {
+                        ProgressView()
                     } else {
-                        viewModel.proxy.play()
+                        Image(systemName: "play.circle.fill")
                     }
-                } label: {
-                    Group {
-                        if viewModel.playerState == .playing {
-                            Image(systemName: "pause.circle.fill")
-                        } else {
-                            Image(systemName: "play.circle.fill")
-                        }
-                    }
-                    .font(.system(size: 28, weight: .heavy, design: .default))
                 }
-                .buttonStyle(.plain)
-
-                Button {
-                    viewModel.proxy.jumpForward(15)
-                } label: {
-                    Image(systemName: "goforward.15")
-                        .font(.system(size: 28, weight: .regular, design: .default))
-                }
-                .buttonStyle(.plain)
+                .frame(maxWidth: 30)
             }
+
+            Button("Go forward", systemImage: "goforward.15") {
+                viewModel.proxy.jumpForward(15)
+            }
+        }
+        .buttonStyle(.plain)
+        .labelStyle(.iconOnly)
+        .font(.system(size: 28, weight: .regular, design: .default))
+        .onChange(of: isScrubbing) {
+            guard !isScrubbing else { return }
+            viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int(currentPosition * 100) / 100))
+        }
+        .onChange(of: viewModel.position) {
+            guard !isScrubbing else { return }
+            currentPosition = viewModel.position
         }
     }
 }

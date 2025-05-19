@@ -6,20 +6,30 @@ struct OverlayView: View {
     @ObservedObject
     var viewModel: ContentViewModel
     @State
-    var isScrubbing: Bool = false
+    private var isScrubbing: Bool = false
     @State
-    var currentPosition: Float = 0
+    private var currentPosition: Float = 0
 
     var body: some View {
         HStack(spacing: 20) {
 
-            Button {
-                viewModel.proxy.jumpBackward(15)
-            } label: {
-                Image(systemName: "gobackward.15")
-                    .font(.system(size: 28, weight: .regular, design: .default))
+            Button("Record", systemImage: "record.circle") {
+                if viewModel.isRecording {
+                    viewModel.proxy.stopRecording()
+                    viewModel.isRecording = false
+                } else {
+                    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    print("Recording Path:", documentsPath.path)
+                    viewModel.proxy.startRecording(atPath: documentsPath.path)
+                    viewModel.isRecording = true
+                }
             }
-            .buttonStyle(.plain)
+            .foregroundStyle(viewModel.isRecording ? .red : .accentColor)
+            .symbolEffect(.pulse, value: viewModel.isRecording)
+
+            Button("Go backward", systemImage: "gobackward.15") {
+                viewModel.proxy.jumpBackward(15)
+            }
 
             Button {
                 if viewModel.playerState == .playing {
@@ -37,21 +47,15 @@ struct OverlayView: View {
                         Image(systemName: "play.circle.fill")
                     }
                 }
-                .font(.system(size: 28, weight: .heavy, design: .default))
                 .frame(maxWidth: 30)
             }
-            .buttonStyle(.plain)
 
-            Button {
+            Button("Go forward", systemImage: "goforward.15") {
                 viewModel.proxy.jumpForward(15)
-            } label: {
-                Image(systemName: "goforward.15")
-                    .font(.system(size: 28, weight: .regular, design: .default))
             }
-            .buttonStyle(.plain)
 
             HStack(spacing: 5) {
-                Text(viewModel.positiveTimeLabel)
+                Text(viewModel.positiveSeconds, format: .runtime)
                     .frame(width: 50)
 
                 Slider(
@@ -61,17 +65,21 @@ struct OverlayView: View {
                     isScrubbing = isEditing
                 }
 
-                Text(viewModel.negativeTimeLabel)
+                Text(viewModel.negativeSeconds, format: .runtime)
                     .frame(width: 50)
             }
+            .font(.system(size: 18, weight: .regular, design: .default))
+            .monospacedDigit()
         }
-        .onChange(of: isScrubbing) { isScrubbing in
+        .labelStyle(.iconOnly)
+        .font(.system(size: 28, weight: .regular, design: .default))
+        .onChange(of: isScrubbing) {
             guard !isScrubbing else { return }
             viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int(currentPosition * 100) / 100))
         }
-        .onChange(of: viewModel.position) { newValue in
+        .onChange(of: viewModel.position) {
             guard !isScrubbing else { return }
-            currentPosition = newValue
+            currentPosition = viewModel.position
         }
     }
 }

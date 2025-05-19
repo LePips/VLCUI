@@ -1,5 +1,3 @@
-import Foundation
-
 public extension VLCVideoPlayer {
 
     enum ValueSelector<ValueType> {

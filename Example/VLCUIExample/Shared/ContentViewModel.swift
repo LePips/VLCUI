@@ -14,26 +14,23 @@ class ContentViewModel: ObservableObject {
     var totalTicks: Int = 0
     @Published
     var isRecording = false
-    
+
     let proxy: VLCVideoPlayer.Proxy = .init()
 
     var configuration: VLCVideoPlayer.Configuration {
         let configuration = VLCVideoPlayer
             .Configuration(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
         configuration.autoPlay = true
+
         return configuration
     }
 
-    var positiveTimeLabel: String {
-        (ticks.roundDownNearestThousand / 1000).timeLabel
+    var positiveSeconds: Int {
+        ticks.roundDownNearestThousand / 1000
     }
 
-    var negativeTimeLabel: String {
-        ((totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000).timeLabel
-    }
-
-    func setCustomPosition(_ newPosition: Float) {
-        position = newPosition
+    var negativeSeconds: Int {
+        (totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000
     }
 
     func onStateUpdated(_ newState: VLCVideoPlayer.State, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {

@@ -6,21 +6,14 @@ struct OverlayView: View {
     @ObservedObject
     var viewModel: ContentViewModel
     @State
-    var isScrubbing: Bool = false
+    private var isScrubbing: Bool = false
     @State
-    var currentPosition: Float = 0
+    private var currentPosition: Float = 0
 
-    @ViewBuilder
-    var recordButton: some View {
-        Image(systemName: "record.circle")
-            .font(.system(size: 28, weight: .regular, design: .default))
-            .foregroundColor(viewModel.isRecording ? .red : .accentColor)
-    }
-    
     var body: some View {
         HStack(spacing: 20) {
 
-            Button {
+            Button("Record", systemImage: "record.circle") {
                 if viewModel.isRecording {
                     viewModel.proxy.stopRecording()
                     viewModel.isRecording = false
@@ -30,74 +23,63 @@ struct OverlayView: View {
                     viewModel.proxy.startRecording(atPath: documentsPath.path)
                     viewModel.isRecording = true
                 }
-            } label: {
-                if #available(iOS 17.0, *) {
-                     recordButton
-                        .symbolEffect(.pulse, isActive: viewModel.isRecording)
+            }
+            .foregroundStyle(viewModel.isRecording ? .red : .accentColor)
+            .symbolEffect(.pulse, value: viewModel.isRecording)
+
+            Button("Go backward", systemImage: "gobackward.15") {
+                viewModel.proxy.jumpBackward(15)
+            }
+
+            Button {
+                if viewModel.playerState == .playing {
+                    viewModel.proxy.pause()
                 } else {
-                    recordButton
+                    viewModel.proxy.play()
                 }
-            }
-            
-            Group {
-                Button {
-                    viewModel.proxy.jumpBackward(15)
-                } label: {
-                    Image(systemName: "gobackward.15")
-                        .font(.system(size: 28, weight: .regular, design: .default))
-                }
-
-                Button {
+            } label: {
+                Group {
                     if viewModel.playerState == .playing {
-                        viewModel.proxy.pause()
+                        Image(systemName: "pause.circle.fill")
+                    } else if viewModel.playerState == .buffering {
+                        ProgressView()
                     } else {
-                        viewModel.proxy.play()
+                        Image(systemName: "play.circle.fill")
                     }
-                } label: {
-                    Group {
-                        if viewModel.playerState == .playing {
-                            Image(systemName: "pause.circle.fill")
-                        } else if viewModel.playerState == .buffering {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "play.circle.fill")
-                        }
-                    }
-                    .font(.system(size: 28, weight: .heavy, design: .default))
-                    .frame(maxWidth: 30)
                 }
-
-                Button {
-                    viewModel.proxy.jumpForward(15)
-                } label: {
-                    Image(systemName: "goforward.15")
-                        .font(.system(size: 28, weight: .regular, design: .default))
-                }
-                
-                HStack(spacing: 5) {
-                    Text(viewModel.positiveTimeLabel)
-                        .frame(width: 50)
-
-                    Slider(
-                        value: $currentPosition,
-                        in: 0 ... Float(1.0)
-                    ) { isEditing in
-                        isScrubbing = isEditing
-                    }
-
-                    Text(viewModel.negativeTimeLabel)
-                        .frame(width: 50)
-                }
+                .frame(maxWidth: 30)
             }
-            
+
+            Button("Go forward", systemImage: "goforward.15") {
+                viewModel.proxy.jumpForward(15)
+            }
+
+            HStack(spacing: 5) {
+                Text(viewModel.positiveSeconds, format: .runtime)
+                    .frame(width: 50)
+
+                Slider(
+                    value: $currentPosition,
+                    in: 0 ... Float(1.0)
+                ) { isEditing in
+                    isScrubbing = isEditing
+                }
+
+                Text(viewModel.negativeSeconds, format: .runtime)
+                    .frame(width: 50)
+            }
+            .font(.system(size: 18, weight: .regular, design: .default))
+            .monospacedDigit()
         }
-        .onChange(of: isScrubbing) { isScrubbing in
+        .labelStyle(.iconOnly)
+        .font(.system(size: 28, weight: .regular, design: .default))
+        .onChange(of: isScrubbing) {
             guard !isScrubbing else { return }
             viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int(currentPosition * 100) / 100))
         }
-        .onChange(of: viewModel.position) { newValue in
+        .onChange(of: viewModel.position) {
             guard !isScrubbing else { return }
-            currentPosition = newValue
+            currentPosition = viewModel.position
         }
     }
 }

@@ -1,5 +1,4 @@
 import Combine
-import Foundation
 import SwiftUI
 
 public struct VLCVideoPlayer: _PlatformRepresentable {

@@ -1,5 +1,3 @@
-import Foundation
-
 extension Optional {
 
     func chaining(_ value: Wrapped) -> Wrapped {

@@ -1,5 +1,3 @@
-import Foundation
-
 public extension VLCVideoPlayer {
 
     // Wrapper so that VLCKit imports are not necessary
