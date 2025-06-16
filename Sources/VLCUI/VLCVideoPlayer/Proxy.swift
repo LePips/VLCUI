@@ -188,20 +188,26 @@ public extension VLCVideoPlayer {
                 throw ThumbnailError.noMedia
             }
 
-            guard let thumbnailer = VLCMediaThumbnailer(media: media, andDelegate: nil) else {
-                throw ThumbnailError.thumbnailerInitializationFailed
-            }
-
             return try await withCheckedContinuation { continuation in
+                
                 let handler = ThumbnailHandler(
-                    thumbnailer: thumbnailer,
                     continuation: continuation
                 ) { [weak self] handler in
                     self?.thumbnailHandlers.remove(handler)
                 }
+                
+                let thumbnailer = VLCMediaThumbnailer(
+                    media: media,
+                    andDelegate: handler
+                )
 
                 self.thumbnailHandlers.insert(handler)
-                handler.fetchThumbnail(position: position, size: size)
+                
+                thumbnailer.snapshotPosition = position
+                thumbnailer.thumbnailWidth = size.width
+                thumbnailer.thumbnailHeight = size.height
+
+                thumbnailer.fetchThumbnail()
             }.get()
         }
 

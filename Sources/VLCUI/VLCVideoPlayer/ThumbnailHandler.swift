@@ -12,30 +12,17 @@ extension VLCVideoPlayer {
     class ThumbnailHandler: NSObject, VLCMediaThumbnailerDelegate {
 
         private var continuation: CheckedContinuation<Result<_PlatformImage, ThumbnailError>, Never>?
-        private var thumbnailer: VLCMediaThumbnailer?
         private var onCleanup: (ThumbnailHandler) -> Void
 
         private let instance = UUID()
 
         init(
-            thumbnailer: VLCMediaThumbnailer,
             continuation: CheckedContinuation<Result<_PlatformImage, ThumbnailError>, Never>,
             onCleanup: @escaping (ThumbnailHandler) -> Void
         ) {
-            self.thumbnailer = thumbnailer
             self.continuation = continuation
             self.onCleanup = onCleanup
             super.init()
-
-            thumbnailer.delegate = self
-        }
-
-        func fetchThumbnail(position: Float, size: CGSize) {
-            thumbnailer?.snapshotPosition = position
-            thumbnailer?.thumbnailWidth = size.width
-            thumbnailer?.thumbnailHeight = size.height
-
-            thumbnailer?.fetchThumbnail()
         }
 
         // VLCMediaThumbnailerDelegate methods can be called from any thread.
@@ -72,8 +59,6 @@ extension VLCVideoPlayer {
         @MainActor
         private func cleanupOnMainActor() {
             continuation = nil
-            thumbnailer?.delegate = nil
-            thumbnailer = nil
             onCleanup(self)
         }
 
