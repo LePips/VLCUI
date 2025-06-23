@@ -8,6 +8,9 @@ public extension VLCVideoPlayer {
         case absolute(ValueType)
     }
 
+    @available(iOS, deprecated: 16.0, message: "Use `Duration` typed functions and properties instead")
+    @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions and properties instead")
+    @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions and properties instead")
     enum TimeSelector {
         /// Set the time in ticks
         case ticks(Int)

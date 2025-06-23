@@ -11,7 +11,7 @@ struct ContentView: View {
             VLCVideoPlayer(configuration: viewModel.configuration)
                 .proxy(viewModel.proxy)
                 .onStateUpdated(viewModel.onStateUpdated)
-                .onTicksUpdated(viewModel.onTicksUpdated)
+                .onSecondsUpdated(viewModel.onSecondsUpdated)
 
             OverlayView(viewModel: viewModel)
                 .padding()

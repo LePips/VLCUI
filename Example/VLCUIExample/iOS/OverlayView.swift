@@ -75,7 +75,9 @@ struct OverlayView: View {
         .font(.system(size: 28, weight: .regular, design: .default))
         .onChange(of: isScrubbing) {
             guard !isScrubbing else { return }
-            viewModel.proxy.setTime(.ticks(viewModel.totalTicks * Int(currentPosition * 100) / 100))
+
+            let newSeconds = viewModel.totalSeconds * Double(currentPosition)
+            viewModel.proxy.setSeconds(newSeconds)
         }
         .onChange(of: viewModel.position) {
             guard !isScrubbing else { return }

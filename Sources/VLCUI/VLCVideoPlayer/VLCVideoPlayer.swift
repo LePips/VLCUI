@@ -60,6 +60,20 @@ public extension VLCVideoPlayer {
     }
 
     /// Sets the action that fires when the media ticks have been updated
+    @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
+    func onSecondsUpdated(_ action: @escaping (Duration, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
+        var copy = self
+        copy.onTicksUpdated = { ticks, playbackInfo in
+            let seconds = Duration.milliseconds(ticks)
+            action(seconds, playbackInfo)
+        }
+        return copy
+    }
+
+    /// Sets the action that fires when the media ticks have been updated
+    @available(iOS, deprecated: 16.0, message: "Use `onDurationUpdated` instead")
+    @available(tvOS, deprecated: 16.0, message: "Use `onDurationUpdated` instead")
+    @available(macOS, deprecated: 13.0, message: "Use `onDurationUpdated` instead")
     func onTicksUpdated(_ action: @escaping (Int, VLCVideoPlayer.PlaybackInformation) -> Void) -> Self {
         copy(modifying: \.onTicksUpdated, with: action)
     }

@@ -80,12 +80,18 @@ public extension VLCVideoPlayer {
         }
 
         /// Set the subtitle delay
+        @available(iOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions instead")
         public func setSubtitleDelay(_ interval: TimeSelector) {
             let delay = interval.asTicks * 1000
             mediaPlayer?.currentVideoSubTitleDelay = delay
         }
 
         /// Set the audio delay
+        @available(iOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions instead")
         public func setAudioDelay(_ interval: TimeSelector) {
             let delay = interval.asTicks * 1000
             mediaPlayer?.currentAudioPlaybackDelay = delay
@@ -99,12 +105,38 @@ public extension VLCVideoPlayer {
         }
 
         /// Set the player time.
+        @available(iOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
+        @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions instead")
         public func setTime(_ time: TimeSelector) {
             guard let mediaPlayer,
                   let media = mediaPlayer.media else { return }
 
             guard time.asTicks >= 0 && time.asTicks <= media.length.intValue else { return }
             mediaPlayer.time = VLCTime(int: time.asTicks.asInt32)
+        }
+
+        /// Set the subtitle delay
+        @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
+        public func setSubtitleDelay(_ seconds: Duration) {
+            mediaPlayer?.currentVideoSubTitleDelay = Int(seconds.microseconds)
+        }
+
+        /// Set the audio delay
+        @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
+        public func setAudioDelay(_ seconds: Duration) {
+            mediaPlayer?.currentAudioPlaybackDelay = Int(seconds.microseconds)
+        }
+
+        /// Set the player time.
+        @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
+        public func setSeconds(_ seconds: Duration) {
+            guard let mediaPlayer,
+                  let media = mediaPlayer.media else { return }
+
+            guard seconds <= media.duration else { return }
+
+            mediaPlayer.time = VLCTime(int: Int32(seconds.milliseconds))
         }
 
         #if !os(macOS)
@@ -189,20 +221,20 @@ public extension VLCVideoPlayer {
             }
 
             return try await withCheckedContinuation { continuation in
-                
+
                 let handler = ThumbnailHandler(
                     continuation: continuation
                 ) { [weak self] handler in
                     self?.thumbnailHandlers.remove(handler)
                 }
-                
+
                 let thumbnailer = VLCMediaThumbnailer(
                     media: media,
                     andDelegate: handler
                 )
 
                 self.thumbnailHandlers.insert(handler)
-                
+
                 thumbnailer.snapshotPosition = position
                 thumbnailer.thumbnailWidth = size.width
                 thumbnailer.thumbnailHeight = size.height

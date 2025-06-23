@@ -5,20 +5,20 @@ import VLCUI
 class ContentViewModel: ObservableObject {
 
     @Published
-    var ticks: Int = 0
+    var seconds: Duration = .zero
     @Published
     var playerState: VLCVideoPlayer.State = .opening
     @Published
     var position: Float = 0
     @Published
-    var totalTicks: Int = 0
+    var totalSeconds: Duration = .zero
     @Published
     var isRecording = false
 
     let proxy: VLCVideoPlayer.Proxy = .init()
 
     var configuration: VLCVideoPlayer.Configuration {
-        let configuration = VLCVideoPlayer
+        var configuration = VLCVideoPlayer
             .Configuration(url: URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!)
         configuration.autoPlay = true
 
@@ -26,20 +26,20 @@ class ContentViewModel: ObservableObject {
     }
 
     var positiveSeconds: Int {
-        ticks.roundDownNearestThousand / 1000
+        Int(seconds.components.seconds)
     }
 
     var negativeSeconds: Int {
-        (totalTicks.roundDownNearestThousand - ticks.roundDownNearestThousand) / 1000
+        Int((totalSeconds - seconds).components.seconds)
     }
 
     func onStateUpdated(_ newState: VLCVideoPlayer.State, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {
         playerState = newState
     }
 
-    func onTicksUpdated(_ newTicks: Int, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {
+    func onSecondsUpdated(_ newSeconds: Duration, _ playbackInformation: VLCVideoPlayer.PlaybackInformation) {
+        seconds = newSeconds
+        totalSeconds = .milliseconds(playbackInformation.length)
         position = playbackInformation.position
-        ticks = newTicks
-        totalTicks = playbackInformation.length
     }
 }
