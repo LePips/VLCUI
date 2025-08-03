@@ -28,7 +28,7 @@ struct OverlayView: View {
             .symbolEffect(.pulse, value: viewModel.isRecording)
 
             Button("Go backward", systemImage: "gobackward.15") {
-                viewModel.proxy.jumpBackward(15)
+                viewModel.proxy.jumpBackward(.seconds(15))
             }
 
             Button {
@@ -51,7 +51,7 @@ struct OverlayView: View {
             }
 
             Button("Go forward", systemImage: "goforward.15") {
-                viewModel.proxy.jumpForward(15)
+                viewModel.proxy.jumpForward(.seconds(15))
             }
 
             HStack(spacing: 5) {
