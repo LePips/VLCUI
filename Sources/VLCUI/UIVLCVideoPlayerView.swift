@@ -174,6 +174,7 @@ extension UIVLCVideoPlayerView {
             length: media.length.intValue.asInt,
             isSeekable: player.isSeekable,
             playbackRate: player.rate,
+            videoSize: player.videoSize,
             currentSubtitleTrack: currentSubtitleTrack,
             currentAudioTrack: currentAudioTrack,
             subtitleTracks: subtitleTracks,

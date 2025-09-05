@@ -1,3 +1,5 @@
+import Foundation
+
 public extension VLCVideoPlayer {
 
     struct PlaybackInformation {
@@ -6,6 +8,8 @@ public extension VLCVideoPlayer {
         public let length: Int
         public let isSeekable: Bool
         public let playbackRate: Float
+
+        public let videoSize: CGSize
 
         public let currentSubtitleTrack: MediaTrack
         public let currentAudioTrack: MediaTrack

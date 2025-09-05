@@ -59,7 +59,7 @@ public extension VLCVideoPlayer {
         public func jumpBackward(_ seconds: Int) {
             mediaPlayer?.jumpBackward(seconds.asInt32)
         }
-        
+
         /// Jump forward a given amount of seconds.
         @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
         public func jumpForward(_ seconds: Duration) {
