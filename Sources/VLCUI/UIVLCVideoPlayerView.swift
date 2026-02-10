@@ -233,7 +233,9 @@ extension UIVLCVideoPlayerView: VLCMediaPlayerDelegate {
 
     private func setConfigurationValues(with player: VLCMediaPlayer, from configuration: VLCVideoPlayer.Configuration) {
 
-        player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
+        if !configuration.skipInitialTimeSet {
+            player.time = VLCTime(int: configuration.startTime.asTicks.asInt32)
+        }
 
         let defaultPlayerSpeed = player.rate(from: configuration.rate)
         player.fastForward(atRate: defaultPlayerSpeed)

@@ -23,6 +23,14 @@ public extension VLCVideoPlayer {
         public var subtitleColor: ValueSelector<_PlatformColor> = .auto
         public var playbackChildren: [PlaybackChild] = []
         public var options: [String: Any] = [:]
+        /// When `true`, the initial `player.time` assignment in
+        /// `setConfigurationValues` is skipped.
+        ///
+        /// Use this for live streams where an explicit seek — even to the
+        /// current position — causes VLC to flush its buffers and re-acquire
+        /// the stream, resulting in long rebuffering delays or loss of the
+        /// live-edge position.
+        public var skipInitialTimeSet: Bool = false
 
         public init(url: URL) {
             self.url = url
