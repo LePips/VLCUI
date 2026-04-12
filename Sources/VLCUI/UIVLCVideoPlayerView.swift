@@ -158,14 +158,21 @@ extension UIVLCVideoPlayerView {
         let audioIndexes = player.audioTrackIndexes as! [Int]
         let audioNames = player.audioTrackNames as! [String]
 
+        let videoIndexes = player.videoTrackIndexes as! [Int]
+        let videoNames = player.videoTrackNames as? [String]
+
         let subtitleTracks = zip(subtitleIndexes, subtitleNames).map { MediaTrack(index: $0, title: $1) }
         let audioTracks = zip(audioIndexes, audioNames).map { MediaTrack(index: $0, title: $1) }
+        let videoTracks = zip(videoIndexes, videoNames ?? []).map { MediaTrack(index: $0, title: $1) }
 
         let currentSubtitleTrack: MediaTrack = subtitleTracks
             .first(where: { $0.index == player.currentVideoSubTitleIndex.asInt })
             .chaining(.init(index: -1, title: "Disable"))
         let currentAudioTrack: MediaTrack = audioTracks
             .first(where: { $0.index == player.currentAudioTrackIndex.asInt })
+            .chaining(.init(index: -1, title: "Disable"))
+        let currentVideoTrack: MediaTrack = videoTracks
+            .first(where: { $0.index == player.currentVideoTrackIndex.asInt })
             .chaining(.init(index: -1, title: "Disable"))
 
         return VLCVideoPlayer.PlaybackInformation(
@@ -177,23 +184,11 @@ extension UIVLCVideoPlayerView {
             videoSize: player.videoSize,
             currentSubtitleTrack: currentSubtitleTrack,
             currentAudioTrack: currentAudioTrack,
+            currentVideoTrack: currentVideoTrack,
             subtitleTracks: subtitleTracks,
             audioTracks: audioTracks,
-            numberOfReadBytesOnInput: media.numberOfReadBytesOnInput,
-            inputBitrate: media.inputBitrate,
-            numberOfReadBytesOnDemux: media.numberOfReadBytesOnDemux,
-            demuxBitrate: media.demuxBitrate,
-            numberOfDecodedVideoBlocks: media.numberOfDecodedVideoBlocks,
-            numberOfDecodedAudioBlocks: media.numberOfDecodedAudioBlocks,
-            numberOfDisplayedPictures: media.numberOfDisplayedPictures,
-            numberOfLostPictures: media.numberOfLostPictures,
-            numberOfPlayedAudioBuffers: media.numberOfPlayedAudioBuffers,
-            numberOfLostAudioBuffers: media.numberOfLostAudioBuffers,
-            numberOfSentPackets: media.numberOfSentBytes,
-            numberOfSentBytes: media.numberOfSentBytes,
-            streamOutputBitrate: media.streamOutputBitrate,
-            numberOfCorruptedDataPackets: media.numberOfCorruptedDataPackets,
-            numberOfDiscontinuties: media.numberOfDiscontinuties
+            videoTracks: videoTracks,
+            statistics: .init(stats: media.statistics)
         )
     }
 }

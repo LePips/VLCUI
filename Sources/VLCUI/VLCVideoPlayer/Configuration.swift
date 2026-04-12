@@ -6,7 +6,7 @@ import UIKit
 
 public extension VLCVideoPlayer {
 
-    // Configuration for VLCMediaPlayer
+    /// Configuration for VLCMediaPlayer
     struct Configuration {
         public var url: URL
         public var autoPlay: Bool

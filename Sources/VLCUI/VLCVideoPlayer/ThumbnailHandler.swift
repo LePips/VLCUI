@@ -25,10 +25,7 @@ extension VLCVideoPlayer {
             super.init()
         }
 
-        // VLCMediaThumbnailerDelegate methods can be called from any thread.
-        // They need to be nonisolated and then dispatch to the main actor if they interact
-        // with @MainActor-isolated properties or methods.
-        public nonisolated func mediaThumbnailer(
+        nonisolated func mediaThumbnailer(
             _ mediaThumbnailer: VLCMediaThumbnailer,
             didFinishThumbnail thumbnail: CGImage
         ) {
@@ -42,22 +39,21 @@ extension VLCVideoPlayer {
             #endif
 
             Task { @MainActor in
-                self.continuation?.resume(success: image)
-                self.cleanupOnMainActor()
+                complete(with: .success(image))
             }
         }
 
-        public nonisolated func mediaThumbnailerDidTimeOut(
+        nonisolated func mediaThumbnailerDidTimeOut(
             _ mediaThumbnailer: VLCMediaThumbnailer
         ) {
             Task { @MainActor in
-                self.continuation?.resume(failure: .timeout)
-                self.cleanupOnMainActor()
+                complete(with: .failure(.timeout))
             }
         }
 
         @MainActor
-        private func cleanupOnMainActor() {
+        private func complete(with result: Result<_PlatformImage, ThumbnailError>) {
+            continuation?.resume(with: .success(result))
             continuation = nil
             onCleanup(self)
         }
