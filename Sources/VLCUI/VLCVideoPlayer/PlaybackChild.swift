@@ -19,7 +19,6 @@ public extension VLCVideoPlayer {
             self.enforce = enforce
         }
 
-        // Wrapper so that VLCKit imports are not necessary
         public enum PlaybackChildType {
             case subtitle
             case audio

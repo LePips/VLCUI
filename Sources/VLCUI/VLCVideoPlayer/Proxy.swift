@@ -49,7 +49,15 @@ public extension VLCVideoPlayer {
         @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
         @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions instead")
         public func jumpForward(_ seconds: Int) {
-            mediaPlayer?.jumpForward(seconds.asInt32)
+            let remainingTime = -(mediaPlayer?.remainingTime?.intValue ?? 0)
+
+            guard remainingTime > 0 else { return }
+
+            if remainingTime < seconds.asInt32 * 1000 {
+                mediaPlayer?.time = mediaPlayer?.media?.length ?? VLCTime(int: 0)
+            } else {
+                mediaPlayer?.jumpForward(seconds.asInt32)
+            }
         }
 
         /// Jump backward a given amount of seconds.
@@ -57,19 +65,39 @@ public extension VLCVideoPlayer {
         @available(tvOS, deprecated: 16.0, message: "Use `Duration` typed functions instead")
         @available(macOS, deprecated: 13.0, message: "Use `Duration` typed functions instead")
         public func jumpBackward(_ seconds: Int) {
-            mediaPlayer?.jumpBackward(seconds.asInt32)
+            let currentTime = mediaPlayer?.time.intValue ?? 0
+
+            if seconds.asInt32 > currentTime {
+                mediaPlayer?.time = VLCTime(int: 0)
+            } else {
+                mediaPlayer?.jumpBackward(seconds.asInt32)
+            }
         }
 
-        /// Jump forward a given amount of seconds.
+        /// Jump forward a given duration.
         @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
         public func jumpForward(_ seconds: Duration) {
-            mediaPlayer?.jumpForward(Int32(seconds.components.seconds))
+            let remainingTime = Duration.milliseconds(-(mediaPlayer?.remainingTime?.intValue ?? 0))
+
+            guard remainingTime > .zero else { return }
+
+            if remainingTime < seconds {
+                mediaPlayer?.time = mediaPlayer?.media?.length ?? VLCTime(int: 0)
+            } else {
+                mediaPlayer?.jumpForward(Int32(seconds.components.seconds))
+            }
         }
 
-        /// Jump backward a given amount of seconds.
+        /// Jump backward a given duration.
         @available(iOS 16.0, macOS 13.0, tvOS 16.0, *)
         public func jumpBackward(_ seconds: Duration) {
-            mediaPlayer?.jumpBackward(Int32(seconds.components.seconds))
+            let currentTime = Duration.milliseconds(mediaPlayer?.time.intValue ?? 0)
+
+            if seconds > currentTime {
+                mediaPlayer?.time = VLCTime(int: 0)
+            } else {
+                mediaPlayer?.jumpBackward(Int32(seconds.components.seconds))
+            }
         }
 
         /// Go to the next frame.
