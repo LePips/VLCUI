@@ -1,7 +1,7 @@
 # VLCUI
 
 > [!WARNING]
-> This project is no longer maintained. I would strongly recommend using [SwiftVLC](https://github.com/harflabs/SwiftVLC) instead.
+> This project is no longer maintained. I would strongly recommend using [MPVUI](https://github.com/LePips/MPVUI) or [SwiftVLC](https://github.com/harflabs/SwiftVLC) instead.
 
 A [VLCKit](https://code.videolan.org/videolan/VLCKit) wrapper for SwiftUI.
 
